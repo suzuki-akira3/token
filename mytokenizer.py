@@ -12,7 +12,10 @@ for ss in splitspaces:
     token_list.append([w for w in ss.groups()])
 
 for token_ in token_list:
-    token = ''.join(token_)
-    puncts = re.match(r'([/+?])([\.\,\;\:])', token)
+    print(token_)
+    puncts = re.match(r'(.+?)([\.\,\;\:]$)', token_[0])
     if puncts:
-        print(puncts.groups())
+        print('\t\t', list(puncts.groups()) + [token_[1]])
+    else:
+        print('\t', token_)
+
