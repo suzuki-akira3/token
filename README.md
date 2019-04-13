@@ -9,3 +9,7 @@
  - dicTokenList = [dict={TK:'term', SP:' ', PN:'.'}, dict={LF:'\n'}, ... ]
 
 ### Functions
+ - split by space
+ - prefix
+ - surfix
+ - infix
