@@ -12,15 +12,13 @@ file = Path('./10.1063_1.1774263_jats.txt')
 with file.open(encoding='utf-8') as f:
     doc = f.read()
 
-splitLineSpace = re.finditer(r'([^\n]+)(\n)', doc)
-textList = [OrderedDict({'TX': chunk.group(1), 'LF':chunk.group(2)}) for chunk in splitLineSpace]
+splitLineSpace = re.finditer(r'(?P<TX>[^\n]+)(?P<LF>\n)', doc)
+textList = [chunk.groupdict() for chunk in splitLineSpace]
+# print(textList)
 
 for i, dicText in enumerate(textList):
-    splitspaces = re.finditer(r'([^\s]+?)(\s)',dicText['TX'])
-    token_list = []
-    for ss in splitspaces:
-        dic = OrderedDict( {'TK': ss.group(1), 'SP': ss.group(2)})
-        token_list.append(dic)
+    splitspaces = re.finditer(r'(?P<TK>[^\s]+?)(?P<SP>\s)',dicText['TX'])
+    token_list = [ss.groupdict() for ss in splitspaces]
     dicText['TX'] = token_list
 print(textList)
 
