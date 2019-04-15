@@ -1,5 +1,6 @@
 from pathlib2 import Path
 import re
+from collections import OrderedDict
 import json
 
 class dotdict(dict):
@@ -12,21 +13,16 @@ with file.open(encoding='utf-8') as f:
     doc = f.read()
 
 splitLineSpace = re.finditer(r'([^\n]+)(\n)', doc)
-textList = []
-for chunk in splitLineSpace:
-    dic = {'TX': chunk.group(1), 'LF':chunk.group(2)}
-    textList.append(dic)
+textList = [OrderedDict({'TX': chunk.group(1), 'LF':chunk.group(2)}) for chunk in splitLineSpace]
 
-# d = dotdict(dic)
-# print(d.TX)
-
-for dicText in textList:
-    dotdicText = dotdict(dicText)
-    splitspaces = re.finditer(r'([^\s]+?)(\s)',dotdicText.TX)
+for i, dicText in enumerate(textList):
+    splitspaces = re.finditer(r'([^\s]+?)(\s)',dicText['TX'])
     token_list = []
     for ss in splitspaces:
-        token_list.append([w for w in ss.groups()])
-    print(token_list)
+        dic = OrderedDict( {'TK': ss.group(1), 'SP': ss.group(2)})
+        token_list.append(dic)
+    dicText['TX'] = token_list
+print(textList)
 
 #
 # for token_ in token_list:
