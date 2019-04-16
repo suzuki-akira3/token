@@ -34,7 +34,8 @@ def splitXMLtags(doc):
             key = 'SUP'
         elif 'italic' in tag.taglist:
             key = 'ITL'
-        if doc[i:s]: textList.append({'TX': doc[i:s]})
+        if doc[i:s]:
+            textList.append({'TX': doc[i:s]})
         textList.append({key: doc[s:e]})
         i = e
     return textList
@@ -161,3 +162,12 @@ print(infixTokenList )
 #     s = i; e = index
 #     print(''.join(a[s:e]))
 #     i = index
+
+# def CalcOffset(List, offset):
+#     token_ws = []
+#     for i, dic in enumerate(List):
+#         if 'SP' in dic.keys():
+#             List[i-1].values += dic.values()
+#         else:
+#             token_ws += [dic]
+#
