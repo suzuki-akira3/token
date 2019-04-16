@@ -2,12 +2,12 @@ from pathlib2 import Path
 import pandas as pd
 import re
 
-file = Path('./10.1063_1.5004600_fulltext_20190405.txt')
+file = Path('../10.1063_1.5004600_fulltext_20190405.txt')
 with file.open(encoding='utf-8') as f:
     doc = f.read()
 
-df_sections = pd.read_csv('10.1063_1.5004600_section_offset_20190405.csv')
-df_tags = pd.read_csv('10.1063_1.5004600_xmltag_offset_20190405.csv')
+df_sections = pd.read_csv('../10.1063_1.5004600_section_offset_20190405.csv')
+df_tags = pd.read_csv('../10.1063_1.5004600_xmltag_offset_20190405.csv')
 
 from collections import namedtuple
 from itertools import chain
@@ -17,7 +17,7 @@ class my_tokenizer:
         self.textList = text
 
 def splitXMLtags(doc):
-    tags = df_tags[df_tags.taglist.str.contains('xref|sub|sup')]
+    tags = df_tags[df_tags.taglist.str.contains('xref|sub|sup|italic')]
     i = 0
     textList = []
     for tag in tags.itertuples():
@@ -32,7 +32,9 @@ def splitXMLtags(doc):
             key = 'SUB'
         elif 'sup' in tag.taglist:
             key = 'SUP'
-        textList.append({'TX': doc[i:s]})
+        elif 'italic' in tag.taglist:
+            key = 'ITL'
+        if doc[i:s]: textList.append({'TX': doc[i:s]})
         textList.append({key: doc[s:e]})
         i = e
     return textList
@@ -40,7 +42,7 @@ def splitXMLtags(doc):
 
 def splitParagraph(dic):
     textList = []
-    text = [v for v in dic.values()][0]
+    text = list(dic.values())[0]
     if re.search('\n', text):
         splitLineSpace = re.finditer(r'([^\n]+)(\n)([^\n]+)?|(\n)', text)
         for s in splitLineSpace:
@@ -55,13 +57,11 @@ def splitParagraph(dic):
 
 def splitBySpace(dic):
     tokenList = []
-    text = [v for v in dic.values()][0]
+    text = list(dic.values())[0]
     if re.search(r'\s', text):
         splitspaces = re.finditer(r'(?P<TK>[^\s]+)(?P<SP>\s)?|(?P<SP2>\s)?', text)
         for ss in splitspaces:
-            for k, v in ss.groupdict(default='').items():
-                if v:
-                    tokenList += [{k: v}]
+            tokenList += [{k: v} for k, v in ss.groupdict(default='').items() if v]
     else:
         tokenList += [{'TK': dic.pop('TX')}]
     return tokenList
@@ -69,12 +69,41 @@ def splitBySpace(dic):
 
 def splitByPunct(dic):
     tokenList = []
-    text = [v for v in dic.values()][0]
-    print(text)
-    splitpunct = re.match(r'(?P<TK>[^\s]+)(?P<PN>[\,\.\:\;]$)?', text)
+    text = list(dic.values())[0]
+    splitpunct = re.match(r'(?P<TK>[^\,\.\:\;]+)(?P<PN>[\,\.\:\;]$)?', text)
     if splitpunct:
-        print(splitpunct.groupdict(default=''))
-        tokenList += [{k: v} for k, v in splitpunct.groupdict(default='')]
+        # print(splitpunct.groupdict(default=''))
+        tokenList += [{k: v} for k, v in splitpunct.groupdict(default='').items() if v]
+    else:
+        tokenList += [dic]
+    return tokenList
+
+
+def splitBlPunct(dic):
+    tokenList = []
+    text = list(dic.values())[0]
+    splitblac = re.match(r'(?P<BR1>^[\(\[])(?P<TK>[^\(\[\)\]]+)(?P<BR2>[\)\]])', text)
+    splitblacS = re.match(r'(?P<BR1>^[\(\[])(?P<TK>[^\(\[\)\]]+)', text)
+    splitblacE = re.match(r'(?P<TK>[^\(\[\)\]]+)(?P<BR2>[\)\]])', text)
+    if splitblac:
+        # print(splitblac.groupdict(default=''))
+        tokenList += [{k: v} for k, v in splitblac.groupdict(default='').items() if v]
+    elif splitblacS:
+        tokenList += [{k: v} for k, v in splitblacS.groupdict(default='').items() if v]
+    elif splitblacE:
+        tokenList += [{k: v} for k, v in splitblacE.groupdict(default='').items() if v]
+    else:
+        tokenList += [dic]
+    return tokenList
+
+
+def splitInfix(dic):
+    tokenList = []
+    text = list(dic.values())[0]
+    splitinfix = re.match(r'(?P<TK1>[\w]+)?(?P<IN1>[\-\/\u2215])(?P<TK2>[\w]+)(?:(?P<IN2>[\-\/\u2215])(?P<TK3>[\w]+$))?(?:(?P<IN3>[\-\/\u2215])(?P<TK4>[\w]+$))?', text)
+    if splitinfix:
+        # print(ssplitinfix.groupdict(default=''))
+        tokenList += [{k: v} for k, v in splitinfix.groupdict(default='').items() if v]
     else:
         tokenList += [dic]
     return tokenList
@@ -107,4 +136,28 @@ for dic3 in paraTokenList:
         punkTokenList += [dic3]
 
 
-# (punkTokenList)
+blacTokenList = []
+for dic4 in paraTokenList:
+    if ('TK' in dic4.keys()):
+        blacTokenList += splitBlPunct(dic4)
+    else:
+        blacTokenList += [dic4]
+
+
+infixTokenList = []
+for dic5 in blacTokenList:
+    if ('TK' in dic5.keys()):
+        infixTokenList += splitInfix(dic5)
+    else:
+        infixTokenList += [dic5]
+
+
+print(infixTokenList )
+
+# a = [''.join(list(t.values())) for t in blacTokenList]
+# indexes = [i for i, w in enumerate(a) if w=='\n']
+# i = 0
+# for index in indexes:
+#     s = i; e = index
+#     print(''.join(a[s:e]))
+#     i = index
