@@ -12,33 +12,6 @@ df_tags = pd.read_csv('./10.1063_1.5004600_xmltag_offset_20190405.csv')
 from collections import namedtuple
 
 
-def splitXMLtags(doc):
-    tags = df_tags[df_tags.taglist.str.contains('xref|sub|sup|italic')]
-    i = 0
-    textList = []
-    for tag in tags.itertuples():
-        s, e = tag.start, tag.end
-        #     print(tag.taglist)
-        key = ''
-        if 'xref' in tag.taglist:
-            key = 'REF'
-        elif 'subsup' in tag.taglist:
-            key = 'SBP'
-        elif 'sub' in tag.taglist:
-            key = 'SUB'
-        elif 'sup' in tag.taglist:
-            key = 'SUP'
-        elif 'italic' in tag.taglist:
-            key = 'ITL'
-        if doc[i:s]:
-            textList.append({'TX': doc[i:s]})
-        textList.append({key: doc[s:e]})
-        i = e
-    if e < len(doc):
-        textList.append({'TX': doc[e:]})
-    return textList
-
-
 def rmSections(section):
     secs = df_sections[df_sections['sec_title'].str.match(re.compile(section, re.I))]
     new_doc = doc
@@ -68,6 +41,33 @@ def rmSections(section):
     df_sections.drop(rm_secs)
     df_tags.drop(rm_tags)
     return new_doc
+
+
+def splitXMLtags(doc):
+    tags = df_tags[df_tags.taglist.str.contains('xref|sub|sup|italic')]
+    i = 0
+    textList = []
+    for tag in tags.itertuples():
+        s, e = tag.start, tag.end
+        #     print(tag.taglist)
+        key = ''
+        if 'xref' in tag.taglist:
+            key = 'REF'
+        elif 'subsup' in tag.taglist:
+            key = 'SBP'
+        elif 'sub' in tag.taglist:
+            key = 'SUB'
+        elif 'sup' in tag.taglist:
+            key = 'SUP'
+        elif 'italic' in tag.taglist:
+            key = 'ITL'
+        if doc[i:s]:
+            textList.append({'TX': doc[i:s]})
+        textList.append({key: doc[s:e]})
+        i = e
+    if e < len(doc):
+        textList.append({'TX': doc[e:]})
+    return textList
 
 
 def splitParagraph(dic):
@@ -112,9 +112,9 @@ def splitByPunct(dic):
 def splitByBlacket(dic):
     tokenList = []
     text = list(dic.values())[0]
-    splitblac = re.match(r'(?P<BR1>^[\(\[])(?P<TK>[^\(\[\)\]]+)(?P<BR2>[\)\]])', text)
-    splitblacS = re.match(r'(?P<BR1>^[\(\[])(?P<TK>[^\(\[\)\]]+)', text)
-    splitblacE = re.match(r'(?P<TK>[^\(\[\)\]]+)(?P<BR2>[\)\]])', text)
+    splitblac = re.match(r'(?P<BL1>^[\(\[])(?P<TK>[^\(\[\)\]]+)(?P<BL2>[\)\]])', text)
+    splitblacS = re.match(r'(?P<BL1>^[\(\[])(?P<TK>[^\(\[\)\]]+)', text)
+    splitblacE = re.match(r'(?P<TK>[^\(\[\)\]]+)(?P<BL2>[\)\]])', text)
     if splitblac:
         # print(splitblac.groupdict(default=''))
         tokenList += [{k: v} for k, v in splitblac.groupdict(default='').items() if v]
@@ -127,7 +127,7 @@ def splitByBlacket(dic):
     return tokenList
 
 
-def splitInfix(dic):
+def splitByInfix(dic):
     tokenList = []
     text = list(dic.values())[0]
     splitinfix = re.match(r'(?P<TK1>[\w]+)?(?P<IN1>[\-\/\u2215])(?P<TK2>[\w]+)(?:(?P<IN2>[\-\/\u2215])(?P<TK3>[\w]+$))?(?:(?P<IN3>[\-\/\u2215])(?P<TK4>[\w]+$))?', text)
@@ -178,7 +178,7 @@ for dic4 in punkTokenList:
 infixTokenList = []
 for dic5 in blacTokenList:
     if ('TK' in dic5.keys()):
-        infixTokenList += splitInfix(dic5)
+        infixTokenList += splitByInfix(dic5)
     else:
         infixTokenList += [dic5]
 
@@ -200,15 +200,17 @@ def CalcOffset(List, offset):
     entity_dic = {
         'TK' : '_',
         'PN' : '_',
-        'BR1' : '_',
-        'BR2' : '_',
+        'BL1' : '_',
+        'BL2' : '_',
         'LF' : '_',
         'SP' : '_',
         'TK1' : 'compound',
         'TK2' : 'compound',
         'TK3' : 'compound',
+        'TK4': 'compound',
         'IN1' : 'compound',
         'IN2' : 'compound',
+        'IN3': 'compound',
         'SUB' : 'subscript',
         'SUP' : 'superscript',
         'ITL' : 'italic',
