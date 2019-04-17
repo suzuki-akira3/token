@@ -9,8 +9,8 @@ PN: punctuations
 BL: blackets
 
 ## XML tags
-| abbrev. | XML tag | entity |
-|:-----------:|:------------:|:------------:|
+| abbrev.| XML tag | entity |
+|:----:|:----:|:----:|
 | REF | xref | reference |
 | SUB | sub | subscript |
 | SUP | sup | superscript |
