@@ -2,24 +2,17 @@ from pathlib2 import Path
 import pandas as pd
 import re
 
-file = Path('./10.1063_1.5004600_fulltext_20190405.txt')
-with file.open(encoding='utf-8') as f:
-    doc = f.read()
-
-df_sections = pd.read_csv('./10.1063_1.5004600_section_offset_20190405.csv')
-df_tags = pd.read_csv('./10.1063_1.5004600_xmltag_offset_20190405.csv')
-
 
 def rmsections(sect):
     secs = df_sections[df_sections['sec_title'].str.match(re.compile(sect, re.I))]
-    doc2 = doc
+    newdoc = doc
     tups = []
     rm_secs = []
     rm_tags = []
     for sec in secs.itertuples():
         s, e = sec.start, sec.end
         tups.append([s, e])
-        doc2 = doc2.replace(doc[s:e], '', 1)
+        newdoc = newdoc.replace(doc[s:e], '', 1)
 
         sloc = df_sections[(df_sections.start >= s) & (df_sections.end <= e)].index
         rm_secs += [i for i in sloc]
@@ -38,13 +31,13 @@ def rmsections(sect):
 
     df_sections.drop(rm_secs)
     df_tags.drop(rm_tags)
-    return doc2
+    return newdoc
 
 
-def splitxmltags(doc2):
+def splitxmltags(newdoc):
     tags = df_tags[df_tags.taglist.str.contains('xref|sub|sup|italic')]
     i = 0
-    text_list = []
+    textlist = []
     for tag in tags.itertuples():
         s, e = tag.start, tag.end
         #     print(tag.taglist)
@@ -59,17 +52,17 @@ def splitxmltags(doc2):
             key = 'SUP'
         elif 'italic' in tag.taglist:
             key = 'ITL'
-        if doc2[i:s]:
-            text_list.append({'TX': doc2[i:s]})
-        text_list.append({key: doc2[s:e]})
+        if newdoc[i:s]:
+            textlist.append({'TX': newdoc[i:s]})
+        textlist.append({key: newdoc[s:e]})
         i = e
-    if i < len(doc2):
-        text_list.append({'TX': doc2[i:]})
-    return text_list
+    if i < len(newdoc):
+        textlist.append({'TX': newdoc[i:]})
+    return textlist
 
 
 def splitparagraph(dicpara):
-    text_list = []
+    textlist = []
     text = list(dicpara.values())[0]
     if re.search('\n', text):
         split_line_space = re.finditer(r'([^\n]+)(\n)([^\n]+)?|(\n)([^\n]+)?', text)
@@ -77,56 +70,56 @@ def splitparagraph(dicpara):
             for v in s.groups(default=''):
                 if v:
                     key = 'TX' if v != '\n' else 'LF'
-                    text_list += [{key: v}]
+                    textlist += [{key: v}]
     else:
-        text_list += [dicpara]
-    return text_list
+        textlist += [dicpara]
+    return textlist
 
 
 def splitbyspace(dicsp):
-    token_list = []
+    tokenlist = []
     text = list(dicsp.values())[0]
     if re.search(r'\s', text):
         splitspaces = re.finditer(r'(?P<TK>[^\s]+)(?P<SP>\s)?|(?P<SP2>\s)?', text)
         for ss in splitspaces:
-            token_list += [{k[0:2]: v} for k, v in ss.groupdict(default='').items() if v]
+            tokenlist += [{k[0:2]: v} for k, v in ss.groupdict(default='').items() if v]
     else:
-        token_list += [{'TK': dicsp.pop('TX')}]
-    return token_list
+        tokenlist += [{'TK': dicsp.pop('TX')}]
+    return tokenlist
 
 
 def splitbypunct(dicpn):
-    token_list = []
+    tokenlist = []
     text = list(dicpn.values())[0]
     splitpunct = re.match(r'(?P<TK>.+?)(?P<PN>[,.:;]$)', text)
     if splitpunct:
         #         print(splitpunct.groupdict(default=''))
-        token_list += [{k: v} for k, v in splitpunct.groupdict(default='').items() if v]
+        tokenlist += [{k: v} for k, v in splitpunct.groupdict(default='').items() if v]
     else:
-        token_list += [dicpn]
-    return token_list
+        tokenlist += [dicpn]
+    return tokenlist
 
 
 def splitbyblacket(dicbl):
-    token_list = []
+    tokenlist = []
     text = list(dicbl.values())[0]
     splitblac = re.match(r'(?P<BL1>^[\(\[])(?P<TK>[^\(\[\)\]]+)(?P<BL2>[\)\]])', text)
     splitblacS = re.match(r'(?P<BL1>^[\(\[])(?P<TK>[^\(\[\)\]]+)', text)
     splitblacE = re.match(r'(?P<TK>[^\(\[\)\]]+)(?P<BL2>[\)\]])', text)
     if splitblac:
         # print(splitblac.groupdict(default=''))
-        token_list += [{k: v} for k, v in splitblac.groupdict(default='').items() if v]
+        tokenlist += [{k: v} for k, v in splitblac.groupdict(default='').items() if v]
     elif splitblacS:
-        token_list += [{k: v} for k, v in splitblacS.groupdict(default='').items() if v]
+        tokenlist += [{k: v} for k, v in splitblacS.groupdict(default='').items() if v]
     elif splitblacE:
-        token_list += [{k: v} for k, v in splitblacE.groupdict(default='').items() if v]
+        tokenlist += [{k: v} for k, v in splitblacE.groupdict(default='').items() if v]
     else:
-        token_list += [dicbl]
-    return token_list
+        tokenlist += [dicbl]
+    return tokenlist
 
 
 def splitbyinfix(dicif):
-    token_list = []
+    tokenlist = []
     text = list(dicif.values())[0]
     splitinfix = re.match(
         r'(?P<TK1>[\w]+)?(?P<IN1>[\-/\u2215])(?P<TK2>[\w]+)(?:(?P<IN2>[\-/\u2215])(?P<TK3>[\w]+$))?'
@@ -134,64 +127,23 @@ def splitbyinfix(dicif):
         text)
     if splitinfix:
         # print(ssplitinfix.groupdict(default=''))
-        token_list += [{k: v} for k, v in splitinfix.groupdict(default='').items() if v]
+        tokenlist += [{k: v} for k, v in splitinfix.groupdict(default='').items() if v]
     else:
-        token_list += [dicif]
-    return token_list
-
-
-section = r'TABLE(.+?)-body'
-new_doc = rmsections(section)
-
-textList = splitxmltags(new_doc)
-
-paratextlist = []
-for dic in textList:
-    if 'TX' in dic.keys():
-        paratextlist += splitparagraph(dic)
-    else:
-        paratextlist += [dic]
-
-paratokenlist = []
-for dic2 in paratextlist:
-    if 'TX' in dic2.keys():
-        paratokenlist += splitbyspace(dic2)
-    else:
-        paratokenlist += [dic2]
-
-punkTokenList = []
-for dic3 in paratokenlist:
-    if 'TK' in dic3.keys():
-        punkTokenList += splitbypunct(dic3)
-    else:
-        punkTokenList += [dic3]
-
-blactokenlist = []
-for dic4 in punkTokenList:
-    if 'TK' in dic4.keys():
-        blactokenlist += splitbyblacket(dic4)
-    else:
-        blactokenlist += [dic4]
-
-infixtokenlist = []
-for dic5 in blactokenlist:
-    if 'TK' in dic5.keys():
-        infixtokenlist += splitbyinfix(dic5)
-    else:
-        infixtokenlist += [dic5]
+        tokenlist += [dicif]
+    return tokenlist
 
 
 def setparagraph(tokenlist):
-    paragraph_texts = []
+    paragraphtexts = []
     indexes = [i for i, w in enumerate(tokenlist) if list(w.values())[0] == '\n']
     s = 0
     for index in indexes:
         e = index + 1
         text = ''.join([''.join(list(w.values())) for w in tokenlist[s:e]])
         if text != '\n':
-            paragraph_texts.append(text)
+            paragraphtexts.append(text)
         s = e
-    return paragraph_texts
+    return paragraphtexts
 
 
 def calcoffset(tokenlist, offset):
@@ -271,5 +223,52 @@ def outputtsv(outfile, tokenlist):
     print(tsv_text.rstrip('\n\n'), file=fw)
 
 
+# main
+file = Path('./10.1063_1.5004600_fulltext_20190405.txt')
+with file.open(encoding='utf-8') as f:
+    doc = f.read()
+df_sections = pd.read_csv('./10.1063_1.5004600_section_offset_20190405.csv')
+df_tags = pd.read_csv('./10.1063_1.5004600_xmltag_offset_20190405.csv')
+
+section = r'TABLE(.+?)-body'  # remove sections
+new_doc = rmsections(section)
+
+text_list = splitxmltags(new_doc)
+
+para_textlist = []
+for dic in text_list:
+    if 'TX' in dic.keys():
+        para_textlist += splitparagraph(dic)
+    else:
+        para_textlist += [dic]
+
+para_tokenlist = []
+for dic_para in para_textlist:
+    if 'TX' in dic_para.keys():
+        para_tokenlist += splitbyspace(dic_para)
+    else:
+        para_tokenlist += [dic_para]
+
+punk_tokenlist = []
+for dic_pn in para_tokenlist:
+    if 'TK' in dic_pn.keys():
+        punk_tokenlist += splitbypunct(dic_pn)
+    else:
+        punk_tokenlist += [dic_pn]
+
+blac_tokenlist = []
+for dic_bl in punk_tokenlist:
+    if 'TK' in dic_bl.keys():
+        blac_tokenlist += splitbyblacket(dic_bl)
+    else:
+        blac_tokenlist += [dic_bl]
+
+infix_tokenlist = []
+for dic_if in blac_tokenlist:
+    if 'TK' in dic_if.keys():
+        infix_tokenlist += splitbyinfix(dic_if)
+    else:
+        infix_tokenlist += [dic_if]
+
 output = './10.1063_1.5004600_webanno.tsv'
-outputtsv(output, infixtokenlist)
+outputtsv(output, infix_tokenlist)
