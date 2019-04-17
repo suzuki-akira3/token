@@ -8,6 +8,14 @@ SP: space
 PN: punctuations  
 BL: blackets
 
+## XML tags
+| abbrev. | XML tag | entity |
+|:-----------:|:------------:|:------------:|
+| REF | xref | reference |
+| SUB | sub | subscript |
+| SUP | sup | superscript |
+| ITL | italic | italic |
+
 ## Classes
 ### makeDicList
 #### Functions
