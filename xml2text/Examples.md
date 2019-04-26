@@ -1,0 +1,1180 @@
+
+### Read all files
+
+
+```python
+import pandas as pd
+
+with open('10.1063_1.5004600_fulltext_20190405.txt') as f:
+    doc = f.read()
+df_sec = pd.read_csv('10.1063_1.5004600_section_offset_20190405.csv')
+df_tag = pd.read_csv('10.1063_1.5004600_xmltag_offset_20190405.csv')    
+
+print(doc)
+```
+
+    Influence of magnetic frustration and structural disorder on magnetocaloric effect and magneto-transport properties in La1.5Ca0.5CoMnO6 double perovskite
+    The rare existence of a magnetocaloric effect, a Griffith phase, and frustrated magnetism in the antisite disorder compound La1.5Ca0.5CoMnO6 have been investigated in detail in this work. The nature of the observed Griffith phase (at TG ∼ 226 K) can be best understood in terms of ferromagnetic (FM) entities within the globally paramagnetic network above the Curie temperature. From the isothermal magnetization measurement around Curie temperature (TC ∼ 157 K) and cluster glass transition temperature (Tg ∼ 51 K), we have determined the maximum entropy change (−ΔSM) as ∼2.2 J/kg K and ∼1.2 J/kg K, respectively, for a magnetic field variation of 7 T. Interestingly, a sudden drop of resistivity curve at Tg, associated with magnetic frustration or magnetic disorder, can be related to the ferromagnetic (FM) phases with antiferromagnetic antiphase boundaries, giving rise to a large negative magnetoresistance (∼67%) at 45 K.
+    I. INTRODUCTION
+    In recent times, there has been an immense search for magnetic refrigerant materials, exhibiting a temperature change when exposed to adiabatic demagnetization, for the development of novel solid state refrigerator applications. Over the last two decades, magnetocaloric effect (MCE) based refrigeration has attracted considerable attention of the researchers due to its wide applications for high energy efficiency and pollution free environment towards green cooling technology.1–3 The physical origin behind the MCE is the coupling of the magnetic sub-lattice to the application or the removal of a magnetic field that modifies the magnetic contribution to the entropy of the solid.4 This usually provides some interesting extra information across the ferromagnetic (FM) → paramagnetic (PM) phase transition related to both underlying physics and functionality of double perovskite with the generic formula A2−xA′xCoMnO6 (where A and A′ represent trivalent rare earth and divalent alkaline earth element, respectively).5 This phase transition is related to the order of magnetic transition and/or dimensionality of lattice (d) and/or dimensionality of lattice parameter (n). For example, La1.5Sr0.5CoMnO6 double perovskite [large A site ionic radii (⟨rA⟩)] is characterized by 2nd order magnetic phase transition (FM1→FM2).6,7 On the other hand, La2−xCaxCoMnO6 double perovskite [small A site ionic radii (⟨rA⟩)] is characterized by 1st order magnetic phase transition (PM→FM) using various techniques.8,9 In the above correlated electron system, ferromagnetism usually arises from the coupling of itinerant eg electrons with the localized t2g electrons dictated by superexchange (SE) and/or double exchange (DE) interaction.10
+    Magnetic refrigeration is an emerging technology alternative to the usual gas compression refrigeration techniques in air condition and food conservation applications. Now-a-days, noise-free solid state cooling refrigeration is generally used for cooling from room temperature to the temperature of hydrogen (∼20 K) or helium liquefaction (∼4.2 K). Low temperature solid state cooling is most useful in space research applications and medical applications also.4 The magnetic refrigeration offers the prospect of an energy efficient and environment friendly alternative to the common vapour-cycle refrigeration technology in use today.11
+    Most of the polycrystalline antisite-disordered (ASD) double perovskite samples have complex situation due to being intrinsically inhomogeneous both above and below the magnetic transition temperature. As a result, there are noticeable variations of physical parameters such as isothermal magnetic entropy change (ΔSM) which is a measure of spin distortion across magnetic transition.12,13 This is generally achieved across first order magnetic phase transition (PM → FM). Recently, Ghosh et al. reported that GdFe0.17Sn2 intermetallic compound shows magnetic entropy change near glassy magnetic transition temperature.14 Moreover, for a good refrigerator, it is suggested that the material in choice should have (1) a high concentration of magnetic moment (3d or 4f elements), (2) large transition width, (3) high permeability, and (4) small hysteretic behavior as a function of both field and temperature cycling. This is because the relative cooling power (RCP) or cooling efficiency across magnetic phase transition associates with the product of ΔSM and full width at half maxima (δTFWHM) near transition region and it leads to the reduction in energy loss during magnetization and demagnetization.
+    The critical behavior across FM→PM phase transition in 25% Ca substituted La2CoMnO6 [La1.5Ca0.5CoMnO6 (LCCMO)] is studied here. Interestingly, we have also studied the critical behavior of this system across its glassy transition temperature. We have investigated the field dependence of ΔSM and RCP near these phase transition temperatures.
+    II. EXPERIMENTAL DETAILS
+    The polycrystalline La1.5Ca0.5CoMnO6 (LCCMO) sample used in the present investigation has been synthesized by the conventional sol-gel method, the details of which have been presented in our previous report.8 Phase purity of the compound was confirmed by high resolution X-ray powder diffraction (HRXRD) technique at room temperature using Cu-Kα radiation (λ= 1.542 Å). The Rietveld refinement for HRXRD data was carried out using FullProf Suite software. All dc magnetization measurements were carried out using a superconducting quantum interference device magnetometer (SQUID; Quantum Design, USA). Resistivity measurements were taken using a standard technique by employing a cryogen free closed cycle helium refrigeration variable temperature cryostat fitted in a superconducting magnet (model-8TCFMVTI; Cryogenics, Ltd., U.K.). During measurements, the temperature stability was within ±10 mK.
+    III. RESULTS AND DISCUSSION
+    A. Structural analysis
+    Figure 1(a) shows Rietveld refinement of LCCMO along with experimental (red circles), simulated (black line), difference (green), and Bragg positions (violet) of room temperature XRD data. All of the peaks are indexed as clean single double perovskite structure without any impurity phase. Evidently, the Bragg positions are in good agreement with a monoclinic (P21/n) phase. The detailed structural parameters, average bond lengths, bond angles, and cell volume are shown in Table I. The refined parameters are in fairly good agreement with that reported by our Neuron powder diffraction (NPD) analysis.8,15 The Rietveld refinement is not consistent with 100% order of transition metal (TM) of Mn and Co ions on B′ and B″ sites of this double perovskite system. The O-TM-O angles are all 180° by symmetry, but TM-O-TM angles are less than 180°. The stability of the sample is usually expressed by estimating the tolerance factor, and it is less than 1 for monoclinic cell. The tolerance factor (t), which is the degree of distortion of a double perovskite, can be written as16where rLa, rCa, rMn, rCo, and rO are the ionic radii of respective ions. The estimated tolerance factor of LCCMO is 0.907 (<1) based on the ionic radii reported by Shanon.17 The low value of t results in a distorted double perovskite structure with tilted CoO6 and MnO6 octahedra. This results in a deviation of the TM-O-TM bond angles from the ideal value of 180°. The crystal structure of LCCMO is constructed using the refined parameters with the help of Diamond software as shown in Fig. 1(b). It is observed that the two octahedra (CoO6 and MnO6) are located on the cubic edge of the lattice.
+    B. Magnetic property
+    1. Griffiths-like phase study
+    The temperature dependent zero field cooled (ZFC) magnetization with the applied magnetic field of 500 Oe is shown in Fig. 2(a).The ZFC magnetization measurement exhibits a well defined paramagnetic (PM) to ferromagnetic transition (FM) with a transition temperature (TC ∼ 157 K) along with two low temperature transitions, one glassy transition temperature (Tg) at 51 K followed by another canted antiferromagnetic transition temperature (TCAFM) at 9 K. In this context, we notice that an extra peak is present in ZFC magnetization curve in between Tg and TCAFM at TPHS ∼23 K. This transition temperature is assigned as phase separation (PHS) temperature which has been explained in our previous report.8 These results are consistent with our previously reported magnetic study8,15 on the sample. The upper inset of Fig. 2(a) shows the inverse dc susceptibility (χdc=M/H) as a function of temperature measured under field cooled (FC) mode at 100 Oe. We have observed a linear behavior of this sample at high temperature (225 K to 300 K) PM regime. The linear PM regime obeys the Curie Weiss law of the form χdc=CT−TCW (C is Curie constant and TCW is Curie-Weiss temperature). From the best fit (red line), we have obtained the value of C [∼5.191(6)] and TCW [∼151.8(2) K]. The calculated effective PM moment (μeff) is found to be ∼6.38 μB. Theoretically, calculated spin-only moment is 6.20 μB using high spin state of Mn (+3 and +2) and Co (+2 and +3) ions in LCCMO system as Mn and Co ions are present in mixed valence states, (+3/+4) for Mn and (+2/+3) for Co.15 The detailed calculation of μeff has been presented elsewhere.15 The calculated theoretical value is slightly smaller than the experimental value, which may signify the presence of small FM entities or FM correlated spins within the globally PM matrix and leads to an increase in dc susceptibility compared with the normal PM dc susceptibility.18 The downturn deviation of χdc−1 (T) curve from Curie-Weiss behavior is observed at a temperature TG ∼ 226 K, known as the Griffiths temperature. This downturn deviation is a determining characteristic feature of Griffiths singularity,19 which was first observed for randomly diluted Ising ferromagnets.20 Recently, Griffith phase (GP) is an important issue of interest regarding the physics of oxide materials.18,21,22 It is reported that GP in our LCCMO system appears in the temperature range TC∼152 K≤ T≤ TG∼226 K. As for comparison, no GP like behaviour has been observed in parent compound La2CoMnO6 system.23,24 On the other hand, our Ca-doped double perovskite system shows GP like behavior due to the presence of higher degree of disorder in polycrystalline sample. The disorder arising from the bending of Co-O-Mn bonds induces the formation of GP like feature in the temperature range TC ≤ T ≤ TG and reduces the transition temperature.25 In this context, we can say that higher degree of disorder exists only in polycrystalline samples as compared to the single crystal.26
+    Usually, the Griffiths singularity is univocally identified by the exponent λ (0≤ λ≤ 1), as obtained from the relation27where TCRand is the critical temperature of random FM (FM entities) where susceptibility tends to diverge. The strength of the GP and the degree of deviation from Curie-Weiss law can be evaluated from the value of λ. Lower inset of Fig. 2(a) shows the log-log plot of χ−1 as a function of reduced temperature (T−TCRand). The slope of the fitted line in Griffiths regime is estimated with TCRand=153.63K, almost same as TC and yielding λGP= 0.865 (152 K ≤ T ≤ 126 K). The value of TCRand is chosen in such a way that λ is zero in PM regime (T> TG). In most of the reported GP compounds, each of them has almost very close magnetic transition temperature (TC or TG) and TCRand value.
+    Next, we plot the temperature dependence of real part of ac susceptibility (χac) measured at a frequency of 981 Hz and ac field of 3 Oe as depicted in Fig. 2(b). A sharp peak observed at 153 K corresponds to the FM Curie temperature (TC). The low temperature χac shows a broad peak indicating a cluster glass like transition (Tg). The detailed experimental evidence has been presented elsewhere.8,15 The inset of Fig. 2(b) shows the inverse of ac susceptibility (χac−1) in the temperature range of 20–200 K measured at 981 Hz. Interestingly, we can clearly observe a downturn of χdc−1. This downturn is also another determining characteristic of Griffith singularity. The bent solid line shows the best fit with temperature dependent χac−1 curve using Eq. (2) in the temperature interval of 155–250 K. The best fit produces TCRand=153.82 K and λ= 0.745. The observed values of TCRand and λ are almost same as that observed from dc inverse susceptibility study previously. So, our experimental evidences and detail analysis clearly confirms that a Griffiths like phase emerges in the LCCMO system.
+    The possible reason behind the existence of a GP in our system is the formation of FM entities.28,29 In our LCCMO system, the transition metal ions (Co and Mn) are randomly occupied at B site due to the presence of anti-site disorder (ASD). This ASD and oxygen vacancy creates a local disorder in the crystal structure. The oxygen vacancy is a common feature for most of the disordered double perovskite systems.8,30 This local disorder is also reflected in the observed shortened average bond-lengths. As a result interionic distance decreases locally in the crystal structure. This initiates random spiral variation of exchange interaction and breaks up a pure system into small FM entities. The GP forms in the temperature range TC ≤ T≤ TG along with non-manageable free energy, when a large fraction of bonds of FM have exchange interaction, J = 0. This disorder induced FM clusters are associated with Griffiths like phase, which are similar to that of the isostructural Ho2NiMnO6,30 Ca3CoMnO6,20 and Pr2CoMnO631 ceramics reported previously.
+    2. Isothermal magnetization study in first quadrant
+    In order to study the magnetic entropy, we have measured isothermal field dependent magnetization, that is, M-H of LCCMO sample at different temperatures (5–250 K) as shown in Fig. 3(a). We can clearly observe that the M-H curve in the high temperature regime (PM regime) increases linearly with applied field but a relatively rapid increase in the low temperature regime (below TC) is observed for a FM sample. From the isothermal magnetization data, we have plotted M2 as a function of H/M (Arrott plots) around cluster glass temperature (Tg) as shown in Fig. 3(b). All the curves in this plot exhibit non-linear behavior. The presence of small spontaneous magnetization [Fig. 3(a)] and non-linear behavior in the Arrott plot [Fig. 3(b)] are the signatures of mixed magnetic phase at Tg.14 Primarily, it was reported that the glassy transition is attributed to the presence of anti-site disorder and frustrated magnetic phases (FM/AFM) in this system.8,28 The crystal structure of this system is an origin of this magnetic frustration. As a consequence, the divalent cation (Ca2+) doping at La (La3+) site in La2CoMnO6 double perovskite system has been found to deviate the bond angles and bond lengths from the ideal crystal structure. So, the distorted crystal structure enhances B (Co/Mn) site disordering. This disorder leads to a random arrangement of the atomic configuration that induces magnetic frustration in the system. Below the cluster glass transition temperature, isothermal magnetization curve at 5 K exhibits small hysteresis behavior as expected for mixed phase (FM/AFM) system [inset of Fig. 3(b)].
+    The isothermal entropy change can be calculated from MCE using Maxwell's relation5,32
+    As isothermal M-H is measured by distinct field changes, the above numerical evaluation of this integral can be replaced by the following expression:
+    where Mm+1 and Mm are the magnetization values measured at temperature Tm+1 and Tm, respectively, and ΔHm represents the field variation from H = 0 to H= Hmax. Here, ΔSM corresponding to the average temperature TAV= (Tm+Tm+1)/2 is driven by total enclosed area across two consecutive M-H curves at Tm and Tm+1. The values of −ΔSM are calculated using Eq. (4) and are plotted as a function of temperature for different fields as shown in Figs. 4(a) and 4(b). The maximum value of −ΔSM at TC is +2.2 J/kg K for the field change of 0–7 T and decreases systematically on the two sides. This value originates from the second order magnetic transition. The observed MCE is directly connected to the temperature dependent magnetization and maximum applied a magnetic field. In this context, we can say that magnetocaloric effect is extended over a broad range of a magnetically frustrated or spin-glass system,33–35 and consequently, it is also observed around the glassy state. Moreover, we have observed another −ΔSM peak near cluster glass transition temperature with peak value +1.2 J/kg K for ΔH = 7 T. This value is smaller than the observed value of −ΔSM at TC due to the competing interactions between magnetic coupling energy and anisotropy energy at that temperature regime. Gorsse et al. have reported magnetocaloric effect near glassy transition temperature in Nd49Al13Ni38 alloy.35 This −ΔSM curve also presents a characteristic shape with broad maxima and width increasing with increasing field as observed at TC. Below Tg, −ΔSM value surprisingly decreases as temperature decreases and becomes positive (i.e., inverse MCE) below canted AFM transition temperature14 whose origin is still unknown to us.
+    The field dependent magnetic entropy change (ΔSM) at a peak temperature (TC) obeys an empirical power law relation
+    where the exponent n depends on the magnetic state of the sample. Franco et al. have reported that at the temperature where entropy is maximum, the exponent (n) becomes independent of magnetic field,36 i.e.,
+    where β and γ are critical exponents. The value of n at TC is found to be (0.58 ± 0.02) calculated from the fitting of ΔSM vs. H plot using Eq. (5) (figure is not shown here). According to mean field approach, the value of exponent n at TC is estimated to be 2/3.37 Recently, some experimental observation around Curie temperature of oxide materials shows a deviation from n = 2/3.38 It can be observed that the obtained value of exponent n for LCCMO sample is quite smaller than the mean field value (2/3). This deviation from mean field behavior can be assigned to the existence of local inhomogeneities for the FM clusters in the vicinity of TC.
+    On the basis of magnetic entropy data, we have calculated the change in specific heat ΔCP associated with magnetic field variation from 0 to H using the following expression:36Using the above expression, the temperature dependence of ΔCP of LCCMO sample at different fields has been displayed in Fig. 5(a). An anomaly is noticed in temperature dependent ΔCP plots due to the magnetic phase transition temperature around 160 K, which is very close to TC. The value of ΔCP instantly changes from negative (below TC) to positive value (above TC) at Curie temperature.
+    With the help of temperature dependent −ΔSM, another important parameter relative cooling power (RCP) of LCCMO has also been investigated. RCP determines how much heat can be transferred between hot (Thot) and cold (Tcold) reservoirs in one ideal refrigeration process. This parameter permits an easy comparison between distinct magnetocaloric materials for the application of magnetic refrigeration. It is defined numerically by the area under the −ΔSM vs. T curve between two temperature (ΔTFWHM = Thot − Tcold) of the full width at half maximum (FWHM) of the curve. The values of RCP have been calculated for both the cases (at TC and around Tg) by39
+    The estimated value of RCP at TC and around Tg is plotted as a function of magnetic field in Fig. 5(b) and inset of Fig. 5(b), respectively. It can be noticed that the value of RCP increases with increasing magnetic field for both the temperature regime. Interestingly, we have observed that the values of RCP are notably larger at TC than around Tg. For a change in magnetic field 7 T, the RCP are found to be 83 J/kg and 39 J/kg around TC and Tg, respectively. The RCP of CaBaCo4O7,40 YbMnO3,41 and Ni50Mn36In1442 have been reported earlier to lie in the range of 37–60 J/kg around TC for a magnetic field change of 7 T. Therefore, a comparison of magnetocaloric properties of LCCMO with those of possible magnetic refrigerant materials exhibits that our proposed compound may be a promising candidate for refrigeration applications around TC. The existence of RCP over a cluster glass temperature regime signifies that this material is also useful for low temperature magnetic refrigeration applications.
+    The field dependence of RCP can be expressed as a scaling relation by considering field dependence entropy change and the reference temperature
+    where m = 1 + 1/δ is the critical exponent of magnetic transition and δ=1+γ/β.37 The fit (red line) of experimental data [Fig. 5(b) and inset of Fig. 5(b)] provides the value of m = 1.299 ± 0.025 and 1.408 ± 0.040 from which δ = 3.34 ± 0.032 and 2.45 ± 0.010 have been calculated at TC and Tg, respectively. Equation (6) can be rewritten as
+    Using the value of n and δ at TC, we have calculated the critical exponents β = 0.3702 and γ = 1.129. These values are quite consistent with anti-site disorder LaxSr2−xFeMoO6 double perovskite system across TC.43 The experimental and calculated results are thus consistent with each other.
+    C. Temperature and field dependent transport study
+    In 3d transition metal based oxide materials, both electrical and magnetic properties are strongly correlated with each other. In such cases, large magnetoresistance (MR) and MCE are usually observed near magnetic phase transition temperatures.44 In this context, there is a definite correlation between the resistivity and magnetic entropy change as proposed by Xiong et al.45 Figure 6(a) shows the temperature dependence of dc electrical resistivity under the application of 0 and 6 T magnetic fields. The plot shows insulating behavior from low temperature to 100 K and then semiconducting like behavior up to room temperature as reported in nanometric LCCMO sample.46 This high temperature semiconducting like behavior is observed due to the competition between FM grains and grain boundaries. At low temperature regime, the ρ(T) curve abruptly increases with decreasing temperature. The inset of Fig. 6(a) shows low temperature ρ(T) plots at different magnetic fields. It is clearly observed that there is a sudden change in ρ(T) curve (large change of slope) near ∼50 K, where MCE is observed and it shifts toward the low temperature regime with the applied magnetic field. This sudden drop in resistivity may be attributed to the magnetic frustration or magnetic disorder that can be related to the FM phases with AFM antiphase boundaries created by/originated from structural disorder in this specimen. Another possible origin may be due to the loss of metallic character which can be related to the decrease in the Co2+ (t2g5eg2) - Mn4+(t2g3eg0) and/or Co3+ (t2g5eg1) - Mn4+ (t2g5eg1) electronic transfer due to the structural disorder in the monoclinic structure of this compound.
+    Now, we will concentrate on the influence of magnetic properties on the magnetoresistance in this compound. Isothermal field dependence of MR has been calculated using the relation
+    where H denotes the external magnetic field and ρ(T, H) and ρ(T,0) illustrate the resistivities at H and 0 external fields, respectively. For all the temperatures, the magnitude of MR(%) value increases smoothly/linearly with the magnetic field and it also increases with decreasing temperature as shown in Fig. 6(b). A large negative value of MR of ∼ −67% has been observed near 45 K, and the magnitude of MR(%) linearly decreases with increasing temperature. With such a large value of MR(%), this material could also be a promising candidate for low temperature magnetoresistive spintronic device applications. The linear variation of MR(%) with the applied dc field is observed due to the enhanced spin polarized tunneling transport of electrons across the grain boundaries. The disappearance of MR(%) at high temperature can be described by the weakening of ferromagnetic exchange mechanism around the respective TC.
+    Figure 6(a) suggests that there are two types of conduction mechanism in the entire temperature range. These two mechanisms may be separated experimentally by operating in two appropriate temperature ranges. However, we separate resistivity data into two temperature ranges 40–100 K (insulating range) and 100–300 K (semiconducting range). For the high temperature range (100–300 K), the field independent dc resistivity curve obeys variable range hopping model (VRH) between localized states as shown in the inset of Fig. 6(b).The VRH model is expressed as
+    where ρ0 is a constant and T0=4EAKBT3/4, KB is the Boltzmann constant, and EA is the polaron activation energy. The zero field activation energy (EA) from the fit is found out to be ∼80 meV and 191.5 meV at 100 and 300 K, respectively. The low value of activation energy indicates that the charge carriers are delocalized in this temperature range of LCCMO system.
+    As already known, parent compound La2CoMnO6 has a long range FM spin ordering from low temperature to room temperature.23,24,47 With the substitution of 20% Ca2+ ions for La3+ ions, the FM interactions (Mn4+-O2–-Co2+ and/or Mn3+-O2–-Co3+) are intervened by AFM interaction (Mn4+/Mn3+-O2–-Mn4+/Mn3+ and/or Co3+/Co2+-O2–-Co3+/Co2+). As a result, the FM arrangement is weakened and the large scale FM arrangement becomes ferro-clusters along with some transition metal ions having AFM arrangement. Further at low temperatures, the FM clusters become smaller and AFM coupling becomes dominant in this specimen. Finally, the compound exhibits AFM behavior with a very high resistivity at low temperatures.
+    IV. CONCLUSIONS
+    The magnetic behavior of the LCCMO polycrystalline sample is found to have a change in magnetic ordering from paramagnetic to ferromagnetic to cluster glass to antiferromagnetic upon cooling. The most general behavior arises from the formation of magnetic clusters derived from the competition between FM and AFM interactions of the random magnetic anisotropy along with anti-site disordering. We have observed GP at a temperature TG ∼226 K due to the formation of FM entities in paramagnetic regime. In terms of MCE, −ΔSM of LCCMO is found to be +2.2 J/kg K and +1.2 J/kg K under a magnetic field change in 7 T at TC (∼157 K) and Tg (∼51 K), respectively. This value of −ΔSM around Tg is smaller than the value of −ΔSM at TC due to the competing interactions between magnetic coupling energy and anisotropy energy. We have also determined the critical exponents β ∼ 0.3702, γ ∼ 1.129, and δ ∼ 3.34 near TC. We have now elucidated the rather curious conductivity behavior of the LCCMO system, where the ground state changes from AFM insulating to FM semiconducting. We have also observed large low temperature MR ∼ −67% behaviour. This large MR exists over a broad temperature range in low temperature regime, and thus, it is technologically more suitable/useful than the colossal MR.
+    TABLE I. 
+    Refined structural parameters after Rietveld analysis of room temperature XRD data of the LCCMO sample: the lattice parameters, bond lengths, and the angles associated with the 3d transition metals and oxygen are presented.
+    Space group	a (Å)	b (Å)	c (Å)	Angle (deg)	Volume (Å3)	χ2
+    P21/n (14)	5.425 (3)	5.457 (2)	7.676(4)	α = γ = 90.0	227.28(2)	2.05
+    β = 89.89 (4)
+    Bond angle (°)θ	Site	Bond length (Å) dTM-O	Bond length (Å) dTM-TM
+    O1-TM-O1 = 180.0	2d	Co-O1 = 2.035 (9)	Mn-Co = 4.070 (5) for O1
+    O2-TM-O2 = 180.0		Co-O2 = 1.914 (5)	
+    O3-TM-O3 = 180.0		Co-O3 = 1.837 (4)	
+    	Mn-Co = 3.852 (9) for O2
+    Co-O1-Mn = 140.99	2c	Mn-O1 = 2.035 (9)	
+    Co-O2-Mn = 174.01		Mn-O2 = 1.938 (4)	
+    Co-O3-Mn = 151.41		Mn-O3 = 2.132 (4)	Mn-Co = 3.969 (8) for O3
+    FIG. 1. 
+    (a) The experimental powder X-ray diffraction pattern of the LCCMO sample at room temperature with the fitted curve (black line) using Rietveld refinement. (b) Crystal structure of LCCMO sample, the sky blue, and purple octahedron correspond to the MnO6 and CoO6 octahedra, respectively.
+    FIG. 2. 
+    (a) Dc magnetization measured under an applied magnetic field of 500 Oe on heating after a ZFC process of the LCCMO sample; the upper inset shows the inverse dc susceptibility near and above the Curie temperature measured under FC condition at 100 Oe. The red line is the fitted line. The lower inset displays the plot of inverse dc susceptibility measured under FC condition at 100 Oe as function of reduced temperature (T−TCRand) in log scale with red lines which are the fitted straight lines. (b) Temperature dependence ac susceptibility χ1R(T) for f = 981 Hz and Hac= 3 Oe; inset displays the plot of inverse ac susceptibility as function of temperature with red line which is the fitted line.
+    FIG. 3. 
+    (a) Isothermal M-H curves at selective temperatures for LCCMO sample. (b) Arrott plot in the temperature range 5–120 K; inset displays isothermal M-H behavior at 5 K.
+    FIG. 4. 
+    Temperature dependence magnetic entropy change (−ΔSM) at different magnetic field calculated from the M-H data (a) at TC and (b) at Tg.
+    FIG. 5. 
+    (a) Change in specific heat (−ΔCP) as a function of temperature at different magnetic field. (b) and inset of (b) are respective relative cooling power (RCP) as a function of temperature at TC and Tg, respectively, with red lines which are the fitted lines using Eq. (9).
+    FIG. 6. 
+    (a) The temperature dependent zoomed view of electrical resistivity (ρ(T)) of LCCMO sample measured at H= 0 and H= 6 T; inset displays electrical resistivity (ρ(T)) in the low temperature regime with different magnetic fields. (b) The MR(%) behavior as a function of field at different temperatures (45, 100, 150, and 250 K); inset shows the variation of ρ(T) with respect to T−0.25 with the best fitted curve (red line) using VRH model.
+    
+    
+
+
+
+```python
+df_sec # Data frame of section offsets
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sec_title</th>
+      <th>start</th>
+      <th>end</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>title</td>
+      <td>0</td>
+      <td>154</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>abstract</td>
+      <td>154</td>
+      <td>1084</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>I. INTRODUCTION</td>
+      <td>1084</td>
+      <td>1100</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>I. INTRODUCTION-0</td>
+      <td>1100</td>
+      <td>2831</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>I. INTRODUCTION-1</td>
+      <td>2831</td>
+      <td>3469</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>I. INTRODUCTION-2</td>
+      <td>3469</td>
+      <td>4673</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>I. INTRODUCTION-3</td>
+      <td>4673</td>
+      <td>5015</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>II. EXPERIMENTAL DETAILS</td>
+      <td>5015</td>
+      <td>5040</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>II. EXPERIMENTAL DETAILS-0</td>
+      <td>5040</td>
+      <td>5940</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>III. RESULTS AND DISCUSSION</td>
+      <td>5940</td>
+      <td>5968</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>A. Structural analysis</td>
+      <td>5968</td>
+      <td>5991</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>A. Structural analysis-0</td>
+      <td>5991</td>
+      <td>7666</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>B. Magnetic property</td>
+      <td>7666</td>
+      <td>7687</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>1. Griffiths-like phase study</td>
+      <td>7687</td>
+      <td>7717</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>1. Griffiths-like phase study-0</td>
+      <td>7717</td>
+      <td>10715</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>1. Griffiths-like phase study-1</td>
+      <td>10715</td>
+      <td>11517</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>1. Griffiths-like phase study-2</td>
+      <td>11517</td>
+      <td>12614</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>1. Griffiths-like phase study-3</td>
+      <td>12614</td>
+      <td>13662</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>2. Isothermal magnetization study in first qua...</td>
+      <td>13662</td>
+      <td>13714</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>2. Isothermal magnetization study in first qua...</td>
+      <td>13714</td>
+      <td>15334</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>2. Isothermal magnetization study in first qua...</td>
+      <td>15334</td>
+      <td>15420</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>2. Isothermal magnetization study in first qua...</td>
+      <td>15420</td>
+      <td>17280</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>2. Isothermal magnetization study in first qua...</td>
+      <td>17280</td>
+      <td>18252</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>2. Isothermal magnetization study in first qua...</td>
+      <td>18252</td>
+      <td>18817</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>2. Isothermal magnetization study in first qua...</td>
+      <td>18817</td>
+      <td>19471</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>2. Isothermal magnetization study in first qua...</td>
+      <td>19471</td>
+      <td>20479</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>2. Isothermal magnetization study in first qua...</td>
+      <td>20479</td>
+      <td>21254</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>C. Temperature and field dependent transport s...</td>
+      <td>21254</td>
+      <td>21305</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>C. Temperature and field dependent transport s...</td>
+      <td>21305</td>
+      <td>22996</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>C. Temperature and field dependent transport s...</td>
+      <td>22996</td>
+      <td>24099</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>C. Temperature and field dependent transport s...</td>
+      <td>24099</td>
+      <td>25022</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>C. Temperature and field dependent transport s...</td>
+      <td>25022</td>
+      <td>25723</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>IV. CONCLUSIONS</td>
+      <td>25723</td>
+      <td>25739</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>IV. CONCLUSIONS-0</td>
+      <td>25739</td>
+      <td>27024</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>TABLE I.</td>
+      <td>27024</td>
+      <td>27034</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>TABLE I. -0</td>
+      <td>27034</td>
+      <td>27258</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>TABLE I. -body-0</td>
+      <td>27258</td>
+      <td>27766</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>FIG. 1.</td>
+      <td>27766</td>
+      <td>27775</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>FIG. 1. -0</td>
+      <td>27775</td>
+      <td>28063</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>FIG. 2.</td>
+      <td>28063</td>
+      <td>28072</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>FIG. 2. -0</td>
+      <td>28072</td>
+      <td>28771</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>FIG. 3.</td>
+      <td>28771</td>
+      <td>28780</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>FIG. 3. -0</td>
+      <td>28780</td>
+      <td>28947</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>FIG. 4.</td>
+      <td>28947</td>
+      <td>28956</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>FIG. 4. -0</td>
+      <td>28956</td>
+      <td>29092</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>FIG. 5.</td>
+      <td>29092</td>
+      <td>29101</td>
+    </tr>
+    <tr>
+      <th>46</th>
+      <td>FIG. 5. -0</td>
+      <td>29101</td>
+      <td>29373</td>
+    </tr>
+    <tr>
+      <th>47</th>
+      <td>FIG. 6.</td>
+      <td>29373</td>
+      <td>29382</td>
+    </tr>
+    <tr>
+      <th>48</th>
+      <td>FIG. 6. -0</td>
+      <td>29382</td>
+      <td>29820</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+df_tag # Data frame of xml tag offsets
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>word</th>
+      <th>taglist</th>
+      <th>start</th>
+      <th>end</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.5</td>
+      <td>['sub']</td>
+      <td>121</td>
+      <td>124</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.5</td>
+      <td>['sub']</td>
+      <td>126</td>
+      <td>129</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>6</td>
+      <td>['sub']</td>
+      <td>134</td>
+      <td>135</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1.5</td>
+      <td>['sub']</td>
+      <td>280</td>
+      <td>283</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.5</td>
+      <td>['sub']</td>
+      <td>285</td>
+      <td>288</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>6</td>
+      <td>['sub']</td>
+      <td>293</td>
+      <td>294</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>G</td>
+      <td>['sub']</td>
+      <td>389</td>
+      <td>390</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>C</td>
+      <td>['sub']</td>
+      <td>606</td>
+      <td>607</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>g</td>
+      <td>['sub']</td>
+      <td>660</td>
+      <td>661</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>M</td>
+      <td>['sub']</td>
+      <td>721</td>
+      <td>722</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>g</td>
+      <td>['sub']</td>
+      <td>863</td>
+      <td>864</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>1–3</td>
+      <td>['sup', {'xref': {'ref-type': 'bibr', 'rid': '...</td>
+      <td>1580</td>
+      <td>1583</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>4</td>
+      <td>['sup', {'xref': {'ref-type': 'bibr', 'rid': '...</td>
+      <td>1785</td>
+      <td>1786</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>2−x</td>
+      <td>['sub']</td>
+      <td>2011</td>
+      <td>2014</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>x</td>
+      <td>['sub']</td>
+      <td>2016</td>
+      <td>2017</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>6</td>
+      <td>['sub']</td>
+      <td>2022</td>
+      <td>2023</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>5</td>
+      <td>['sup', {'xref': {'ref-type': 'bibr', 'rid': '...</td>
+      <td>2122</td>
+      <td>2123</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>1.5</td>
+      <td>['sub']</td>
+      <td>2293</td>
+      <td>2296</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>0.5</td>
+      <td>['sub']</td>
+      <td>2298</td>
+      <td>2301</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>6</td>
+      <td>['sub']</td>
+      <td>2306</td>
+      <td>2307</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>A</td>
+      <td>['sub']</td>
+      <td>2355</td>
+      <td>2356</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>1</td>
+      <td>['sub']</td>
+      <td>2419</td>
+      <td>2420</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>2</td>
+      <td>['sub']</td>
+      <td>2423</td>
+      <td>2424</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>6,7</td>
+      <td>['sup', {'xref': {'ref-type': 'bibr', 'rid': '...</td>
+      <td>2426</td>
+      <td>2429</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>2−x</td>
+      <td>['sub']</td>
+      <td>2451</td>
+      <td>2454</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>x</td>
+      <td>['sub']</td>
+      <td>2456</td>
+      <td>2457</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>6</td>
+      <td>['sub']</td>
+      <td>2462</td>
+      <td>2463</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>A</td>
+      <td>['sub']</td>
+      <td>2511</td>
+      <td>2512</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>8,9</td>
+      <td>['sup', {'xref': {'ref-type': 'bibr', 'rid': '...</td>
+      <td>2605</td>
+      <td>2608</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>g</td>
+      <td>['sub']</td>
+      <td>2712</td>
+      <td>2713</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>368</th>
+      <td>M</td>
+      <td>['sub']</td>
+      <td>26260</td>
+      <td>26261</td>
+    </tr>
+    <tr>
+      <th>369</th>
+      <td>C</td>
+      <td>['sub']</td>
+      <td>26355</td>
+      <td>26356</td>
+    </tr>
+    <tr>
+      <th>370</th>
+      <td>g</td>
+      <td>['sub']</td>
+      <td>26371</td>
+      <td>26372</td>
+    </tr>
+    <tr>
+      <th>371</th>
+      <td>M</td>
+      <td>['sub']</td>
+      <td>26413</td>
+      <td>26414</td>
+    </tr>
+    <tr>
+      <th>372</th>
+      <td>g</td>
+      <td>['sub']</td>
+      <td>26423</td>
+      <td>26424</td>
+    </tr>
+    <tr>
+      <th>373</th>
+      <td>M</td>
+      <td>['sub']</td>
+      <td>26457</td>
+      <td>26458</td>
+    </tr>
+    <tr>
+      <th>374</th>
+      <td>C</td>
+      <td>['sub']</td>
+      <td>26463</td>
+      <td>26464</td>
+    </tr>
+    <tr>
+      <th>375</th>
+      <td>C</td>
+      <td>['sub']</td>
+      <td>26644</td>
+      <td>26645</td>
+    </tr>
+    <tr>
+      <th>376</th>
+      <td>6</td>
+      <td>['sub']</td>
+      <td>28027</td>
+      <td>28028</td>
+    </tr>
+    <tr>
+      <th>377</th>
+      <td>6</td>
+      <td>['sub']</td>
+      <td>28036</td>
+      <td>28037</td>
+    </tr>
+    <tr>
+      <th>378</th>
+      <td>(</td>
+      <td>[{'mo': {'stretchy': 'false'}}]</td>
+      <td>28493</td>
+      <td>28494</td>
+    </tr>
+    <tr>
+      <th>379</th>
+      <td>T</td>
+      <td>['mi']</td>
+      <td>28494</td>
+      <td>28495</td>
+    </tr>
+    <tr>
+      <th>380</th>
+      <td>−</td>
+      <td>['mo']</td>
+      <td>28495</td>
+      <td>28496</td>
+    </tr>
+    <tr>
+      <th>381</th>
+      <td>T</td>
+      <td>['mi', 'mrow']</td>
+      <td>28496</td>
+      <td>28497</td>
+    </tr>
+    <tr>
+      <th>382</th>
+      <td>C</td>
+      <td>['mi', 'mrow']</td>
+      <td>28497</td>
+      <td>28498</td>
+    </tr>
+    <tr>
+      <th>383</th>
+      <td>Rand</td>
+      <td>[{'mtext': {'mathvariant': 'italic'}}, 'mrow']</td>
+      <td>28498</td>
+      <td>28502</td>
+    </tr>
+    <tr>
+      <th>384</th>
+      <td>)</td>
+      <td>[{'mo': {'stretchy': 'false'}}]</td>
+      <td>28502</td>
+      <td>28503</td>
+    </tr>
+    <tr>
+      <th>385</th>
+      <td>χ</td>
+      <td>['mo', 'mrow']</td>
+      <td>28614</td>
+      <td>28615</td>
+    </tr>
+    <tr>
+      <th>386</th>
+      <td>1</td>
+      <td>['mn', 'mrow']</td>
+      <td>28615</td>
+      <td>28616</td>
+    </tr>
+    <tr>
+      <th>387</th>
+      <td>R</td>
+      <td>['mi', 'mrow']</td>
+      <td>28616</td>
+      <td>28617</td>
+    </tr>
+    <tr>
+      <th>388</th>
+      <td>T</td>
+      <td>['italic']</td>
+      <td>28618</td>
+      <td>28619</td>
+    </tr>
+    <tr>
+      <th>389</th>
+      <td>ac</td>
+      <td>['sub']</td>
+      <td>28641</td>
+      <td>28643</td>
+    </tr>
+    <tr>
+      <th>390</th>
+      <td>M</td>
+      <td>['sub']</td>
+      <td>29007</td>
+      <td>29008</td>
+    </tr>
+    <tr>
+      <th>391</th>
+      <td>C</td>
+      <td>['sub']</td>
+      <td>29075</td>
+      <td>29076</td>
+    </tr>
+    <tr>
+      <th>392</th>
+      <td>g</td>
+      <td>['sub']</td>
+      <td>29089</td>
+      <td>29090</td>
+    </tr>
+    <tr>
+      <th>393</th>
+      <td>P</td>
+      <td>['sub']</td>
+      <td>29133</td>
+      <td>29134</td>
+    </tr>
+    <tr>
+      <th>394</th>
+      <td>C</td>
+      <td>['sub']</td>
+      <td>29292</td>
+      <td>29293</td>
+    </tr>
+    <tr>
+      <th>395</th>
+      <td>g</td>
+      <td>['sub']</td>
+      <td>29299</td>
+      <td>29300</td>
+    </tr>
+    <tr>
+      <th>396</th>
+      <td>(9)</td>
+      <td>[{'xref': {'ref-type': 'disp-formula', 'rid': ...</td>
+      <td>29368</td>
+      <td>29371</td>
+    </tr>
+    <tr>
+      <th>397</th>
+      <td>−0.25</td>
+      <td>['sup']</td>
+      <td>29759</td>
+      <td>29764</td>
+    </tr>
+  </tbody>
+</table>
+<p>398 rows × 4 columns</p>
+</div>
+
+
+
+### Extract Figure captions
+
+
+```python
+df_offsets = df_sec[df_sec['sec_title'].str.match('FIG.*-0')] # Extract figure captions using regular expression
+df_offsets
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sec_title</th>
+      <th>start</th>
+      <th>end</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>38</th>
+      <td>FIG. 1. -0</td>
+      <td>27775</td>
+      <td>28063</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>FIG. 2. -0</td>
+      <td>28072</td>
+      <td>28771</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>FIG. 3. -0</td>
+      <td>28780</td>
+      <td>28947</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>FIG. 4. -0</td>
+      <td>28956</td>
+      <td>29092</td>
+    </tr>
+    <tr>
+      <th>46</th>
+      <td>FIG. 5. -0</td>
+      <td>29101</td>
+      <td>29373</td>
+    </tr>
+    <tr>
+      <th>48</th>
+      <td>FIG. 6. -0</td>
+      <td>29382</td>
+      <td>29820</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+for tup in df_offsets.itertuples():
+    print(doc[slice(*tup[2:4])]) # Texts can be extracted using slice such as doc[27775:28063], doc[28072:28771], ...
+```
+
+    (a) The experimental powder X-ray diffraction pattern of the LCCMO sample at room temperature with the fitted curve (black line) using Rietveld refinement. (b) Crystal structure of LCCMO sample, the sky blue, and purple octahedron correspond to the MnO6 and CoO6 octahedra, respectively.
+    
+    (a) Dc magnetization measured under an applied magnetic field of 500 Oe on heating after a ZFC process of the LCCMO sample; the upper inset shows the inverse dc susceptibility near and above the Curie temperature measured under FC condition at 100 Oe. The red line is the fitted line. The lower inset displays the plot of inverse dc susceptibility measured under FC condition at 100 Oe as function of reduced temperature (T−TCRand) in log scale with red lines which are the fitted straight lines. (b) Temperature dependence ac susceptibility χ1R(T) for f = 981 Hz and Hac= 3 Oe; inset displays the plot of inverse ac susceptibility as function of temperature with red line which is the fitted line.
+    
+    (a) Isothermal M-H curves at selective temperatures for LCCMO sample. (b) Arrott plot in the temperature range 5–120 K; inset displays isothermal M-H behavior at 5 K.
+    
+    Temperature dependence magnetic entropy change (−ΔSM) at different magnetic field calculated from the M-H data (a) at TC and (b) at Tg.
+    
+    (a) Change in specific heat (−ΔCP) as a function of temperature at different magnetic field. (b) and inset of (b) are respective relative cooling power (RCP) as a function of temperature at TC and Tg, respectively, with red lines which are the fitted lines using Eq. (9).
+    
+    (a) The temperature dependent zoomed view of electrical resistivity (ρ(T)) of LCCMO sample measured at H= 0 and H= 6 T; inset displays electrical resistivity (ρ(T)) in the low temperature regime with different magnetic fields. (b) The MR(%) behavior as a function of field at different temperatures (45, 100, 150, and 250 K); inset shows the variation of ρ(T) with respect to T−0.25 with the best fitted curve (red line) using VRH model.
+    
+
+
+### Extract tags list in Figure captions
+
+
+```python
+df = pd.DataFrame( columns=['word', 'taglist', 'start', 'end'])
+for tup in df_offsets.itertuples():
+    s, e = tup[2:4]
+    s = df_tag[(df_tag.start>=s) & (df_tag.end<=e)] # section_start <= tag_start & tag_end < section_end
+    df = df.append(s)
+df
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>word</th>
+      <th>taglist</th>
+      <th>start</th>
+      <th>end</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>376</th>
+      <td>6</td>
+      <td>['sub']</td>
+      <td>28027</td>
+      <td>28028</td>
+    </tr>
+    <tr>
+      <th>377</th>
+      <td>6</td>
+      <td>['sub']</td>
+      <td>28036</td>
+      <td>28037</td>
+    </tr>
+    <tr>
+      <th>378</th>
+      <td>(</td>
+      <td>[{'mo': {'stretchy': 'false'}}]</td>
+      <td>28493</td>
+      <td>28494</td>
+    </tr>
+    <tr>
+      <th>379</th>
+      <td>T</td>
+      <td>['mi']</td>
+      <td>28494</td>
+      <td>28495</td>
+    </tr>
+    <tr>
+      <th>380</th>
+      <td>−</td>
+      <td>['mo']</td>
+      <td>28495</td>
+      <td>28496</td>
+    </tr>
+    <tr>
+      <th>381</th>
+      <td>T</td>
+      <td>['mi', 'mrow']</td>
+      <td>28496</td>
+      <td>28497</td>
+    </tr>
+    <tr>
+      <th>382</th>
+      <td>C</td>
+      <td>['mi', 'mrow']</td>
+      <td>28497</td>
+      <td>28498</td>
+    </tr>
+    <tr>
+      <th>383</th>
+      <td>Rand</td>
+      <td>[{'mtext': {'mathvariant': 'italic'}}, 'mrow']</td>
+      <td>28498</td>
+      <td>28502</td>
+    </tr>
+    <tr>
+      <th>384</th>
+      <td>)</td>
+      <td>[{'mo': {'stretchy': 'false'}}]</td>
+      <td>28502</td>
+      <td>28503</td>
+    </tr>
+    <tr>
+      <th>385</th>
+      <td>χ</td>
+      <td>['mo', 'mrow']</td>
+      <td>28614</td>
+      <td>28615</td>
+    </tr>
+    <tr>
+      <th>386</th>
+      <td>1</td>
+      <td>['mn', 'mrow']</td>
+      <td>28615</td>
+      <td>28616</td>
+    </tr>
+    <tr>
+      <th>387</th>
+      <td>R</td>
+      <td>['mi', 'mrow']</td>
+      <td>28616</td>
+      <td>28617</td>
+    </tr>
+    <tr>
+      <th>388</th>
+      <td>T</td>
+      <td>['italic']</td>
+      <td>28618</td>
+      <td>28619</td>
+    </tr>
+    <tr>
+      <th>389</th>
+      <td>ac</td>
+      <td>['sub']</td>
+      <td>28641</td>
+      <td>28643</td>
+    </tr>
+    <tr>
+      <th>390</th>
+      <td>M</td>
+      <td>['sub']</td>
+      <td>29007</td>
+      <td>29008</td>
+    </tr>
+    <tr>
+      <th>391</th>
+      <td>C</td>
+      <td>['sub']</td>
+      <td>29075</td>
+      <td>29076</td>
+    </tr>
+    <tr>
+      <th>392</th>
+      <td>g</td>
+      <td>['sub']</td>
+      <td>29089</td>
+      <td>29090</td>
+    </tr>
+    <tr>
+      <th>393</th>
+      <td>P</td>
+      <td>['sub']</td>
+      <td>29133</td>
+      <td>29134</td>
+    </tr>
+    <tr>
+      <th>394</th>
+      <td>C</td>
+      <td>['sub']</td>
+      <td>29292</td>
+      <td>29293</td>
+    </tr>
+    <tr>
+      <th>395</th>
+      <td>g</td>
+      <td>['sub']</td>
+      <td>29299</td>
+      <td>29300</td>
+    </tr>
+    <tr>
+      <th>396</th>
+      <td>(9)</td>
+      <td>[{'xref': {'ref-type': 'disp-formula', 'rid': ...</td>
+      <td>29368</td>
+      <td>29371</td>
+    </tr>
+    <tr>
+      <th>397</th>
+      <td>−0.25</td>
+      <td>['sup']</td>
+      <td>29759</td>
+      <td>29764</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+

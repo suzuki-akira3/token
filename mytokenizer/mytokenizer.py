@@ -100,36 +100,104 @@ def splitbypunct(dicpn):
     return tokenlist
 
 
-def splitbyblacket(dicbl):
+# def splitbyblacket(dicbl):
+#     tokenlist = []
+#     text = list(dicbl.values())[0]
+#     blacs = '\\u0028\\u005B' # ( [  #〈 Left-Pointing Angle Bracket →003C(<) →2039(‹) →27E8(⟨) ≡3008(〈)
+#     blace = '\\u005D\\u0029' # ) ]  # 〉Right-Pointing Angle Bracket →003E(>) →203A(›) →27E9(⟩) ≡3009(〉)
+#     blac = blacs + blace
+#     splitblac = re.match(rf'(?P<BL1>^[{blacs}])(?P<TK>[^{blac}]+)(?P<BL2>[{blace}])', text)
+#     splitblacs = re.match(rf'(?P<BL1>^[{blacs}])(?P<TK>[^{blac}]+)', text)
+#     splitblace = re.match(rf'(?P<TK>[^{blac}]+)(?P<BL2>[{blace}])', text)
+#     if splitblac:
+# #         print(splitblac.groupdict(default=''))
+#         tokenlist += [{k: v} for k, v in splitblac.groupdict(default='').items() if v]
+#     elif splitblacs:
+#         tokenlist += [{k: v} for k, v in splitblacs.groupdict(default='').items() if v]
+#     elif splitblace:
+# #         print(splitblace.groupdict(default=''))
+#         tokenlist += [{k: v} for k, v in splitblace.groupdict(default='').items() if v]
+#     else:
+#         tokenlist += [dicbl]
+#     return tokenlist
+def splitbyblacket2(dicbl):
     tokenlist = []
     text = list(dicbl.values())[0]
-    splitblac = re.match(r'(?P<BL1>^[\(\[])(?P<TK>[^\(\[\)\]]+)(?P<BL2>[\)\]])', text)
-    splitblacS = re.match(r'(?P<BL1>^[\(\[])(?P<TK>[^\(\[\)\]]+)', text)
-    splitblacE = re.match(r'(?P<TK>[^\(\[\)\]]+)(?P<BL2>[\)\]])', text)
-    if splitblac:
-        # print(splitblac.groupdict(default=''))
-        tokenlist += [{k: v} for k, v in splitblac.groupdict(default='').items() if v]
-    elif splitblacS:
-        tokenlist += [{k: v} for k, v in splitblacS.groupdict(default='').items() if v]
-    elif splitblacE:
-        tokenlist += [{k: v} for k, v in splitblacE.groupdict(default='').items() if v]
-    else:
-        tokenlist += [dicbl]
+    blacs = '\u0028\u005B\u003C\u2039\u27E8\u3008'  # ( [  #〈 Left-Pointing Angle Bracket →003C(<) →2039(‹) →27E8(⟨) ≡3008(〈)
+    blace = '\u005D\u0029\u003E\u203A\u27E9\u3009'  # ) ]  # 〉Right-Pointing Angle Bracket →003E(>) →203A(›) →27E9(⟩) ≡3009(〉)
+    blac = blacs + blace
+
+    lists = []
+    index = []
+    tx = []
+    for i, t in enumerate(text):
+        if t in blacs:
+            tokenlist += [{'BL1': t}]
+            index += [i]
+        elif t in blace:
+            tokenlist += [{'BL2': t}]
+            index += [i]
+        else:
+            tx += t
+            if i < len(text) - 1:
+                if text[i + 1] in blac:
+                    tokenlist += [{'TK': ''.join(tx)}]
+                    tx = ''
+            else:
+                tokenlist += [{'TK': ''.join(tx)}]
     return tokenlist
 
 
 def splitbyinfix(dicif):
     tokenlist = []
     text = list(dicif.values())[0]
+    infix = '\\u002F\\u002D\\u2215\\u2192'  # -/∕ →
     splitinfix = re.match(
-        r'(?P<TK1>[\w]+)?(?P<IN1>[\-/\u2215])(?P<TK2>[\w]+)(?:(?P<IN2>[\-/\u2215])(?P<TK3>[\w]+$))?'
-        r'(?:(?P<IN3>[\-/\u2215])(?P<TK4>[\w]+$))?',
+        rf'(?P<TK1>[^{infix}]+)?(?P<IN1>[{infix}])(?P<TK2>[^{infix}]+)(?:(?P<IN2>[{infix}])(?P<TK3>[^{infix}]+$))?'
+        rf'(?:(?P<IN3>[{infix}])(?P<TK4>[^{infix}]+$))?',
         text)
     if splitinfix:
-        # print(ssplitinfix.groupdict(default=''))
+        #         print(splitinfix.groupdict(default=''))
         tokenlist += [{k: v} for k, v in splitinfix.groupdict(default='').items() if v]
     else:
         tokenlist += [dicif]
+    return tokenlist
+
+
+# def splitbyprefix(dicpr):
+#     tokenlist = []
+#     text = list(dicpr.values())[0]
+#     prefix = '\\u002B\\u002D\\u003C-\\u003E\\u2190-\\u21FF\\u2200-\\u22FF' # +-=<>, Arrows, Relations
+#     splitprefix = re.match(rf'(?P<PR>^[{prefix}])(?P<TK>[^{prefix}]+)', text)
+#     if splitprefix:
+# #         print(splitprefix.groupdict(default=''))
+#         tokenlist += [{k: v} for k, v in splitprefix.groupdict(default='').items() if v]
+#     else:
+#         tokenlist += [dicpr]
+#     return tokenlist
+def splitbyprefix2(dicpr):
+    tokenlist = []
+    text = list(dicpr.values())[0]
+    prefix = r'[\u002B\u002D\u003C-\u003E\u00B1\u2190-\u21FF\u2200-\u22FF]'  # +-=<>±, Arrows, Relations
+    if re.match(prefix, text[0]):
+        tokenlist += [{'PR': text[0]}]
+        if len(text) > 1:
+            tokenlist += [{'TK': ''.join(text[1:])}]
+    else:
+        tokenlist += [{'TK': text}]
+    return tokenlist
+
+
+def splitbysurfix2(dicsr):
+    tokenlist = []
+    text = list(dicsr.values())[0]
+    surfix = r'[\u0025\u00B0\u002B\u002D\u003C-\u003E\u00B1\u2190-\u21FF\u2200-\u22FF]'  # %,°  +-=<>±, Arrows, Relations
+    if re.match(surfix, text[-1]):
+        if len(text) > 1:
+            tokenlist += [{'TK': ''.join(text[:-1])}]
+        tokenlist += [{'SR': text[-1]}]
+    else:
+        tokenlist += [{'TK': text}]
     return tokenlist
 
 
@@ -149,6 +217,8 @@ def setparagraph(tokenlist):
 def calcoffset(tokenlist, offset):
     entity_dic = {
         'TK': '_',
+        'PR': '_',
+        'SR': '_',
         'PN': '_',
         'BL1': '_',
         'BL2': '_',
@@ -259,7 +329,7 @@ for dic_pn in para_tokenlist:
 blac_tokenlist = []
 for dic_bl in punk_tokenlist:
     if 'TK' in dic_bl.keys():
-        blac_tokenlist += splitbyblacket(dic_bl)
+        blac_tokenlist += splitbyblacket2(dic_bl)
     else:
         blac_tokenlist += [dic_bl]
 
@@ -270,5 +340,19 @@ for dic_if in blac_tokenlist:
     else:
         infix_tokenlist += [dic_if]
 
-output = '../xml2text/10.1063_1.5004600_webanno.tsv'
-outputtsv(output, infix_tokenlist)
+prefix_tokenlist = []
+for dic_pr in infix_tokenlist:
+    if 'TK' in dic_pr.keys():
+        prefix_tokenlist += splitbyprefix2(dic_pr)
+    else:
+        prefix_tokenlist += [dic_pr]
+
+surfix_tokenlist = []
+for dic_sr in prefix_tokenlist:
+    if 'TK' in dic_sr.keys():
+        surfix_tokenlist += splitbysurfix2(dic_sr)
+    else:
+        surfix_tokenlist += [dic_sr]
+
+output = './10.1063_1.5004600_webanno.tsv'
+outputtsv(output, surfix_tokenlist)

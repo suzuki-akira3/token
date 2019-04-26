@@ -1,0 +1,20 @@
+import difflib
+paragraph_texts = setparagraph(prefix_tokenlist)
+para = ''.join(paragraph_texts).rstrip().split('\n')
+orig_parahgraph_texts = new_doc.rstrip().split('\n')
+d = difflib.Differ()
+diff = d.compare(para, orig_parahgraph_texts)
+print('\n'.join(diff))
+
+
+from difflib import SequenceMatcher
+paragraph_texts = setparagraph(prefix_tokenlist)
+para = ''.join(paragraph_texts).rstrip().split('\n')
+orig_parahgraph_texts = new_doc.rstrip().split('\n')
+
+# matcher = SequenceMatcher()
+# for i in range(len(para)):
+matcher.set_seq2(para)
+matcher.set_seq1(orig_parahgraph_texts)
+print((matcher.quick_ratio()))
+# dir(matcher)
