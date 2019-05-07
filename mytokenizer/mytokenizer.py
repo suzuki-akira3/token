@@ -82,7 +82,7 @@ def splitbyspace(dicsp):
     if re.search(r'\s', text):
         splitspaces = re.finditer(r'(?P<TK>[^\s]+)(?P<SP>\s)?|(?P<SP2>\s)?', text)
         for ss in splitspaces:
-            tokenlist += [{k[0:2]: v} for k, v in ss.groupdict(default='').items() if v]
+            tokenlist += [{k[0:2]: v} for k, v in ss.groupdict(default='').items() if v]  # TK or SP
     else:
         tokenlist += [{'TK': dicsp.pop('TX')}]
     return tokenlist
