@@ -82,52 +82,32 @@ def splitbyspace(dicsp):
     if re.search(r'\s', text):
         splitspaces = re.finditer(r'(?P<TK>[^\s]+)(?P<SP>\s)?|(?P<SP2>\s)?', text)
         for ss in splitspaces:
-            tokenlist += [{k[0:2]: v} for k, v in ss.groupdict(default='').items() if v]  # TK or SP
+            tokenlist += [{k[0:2]: v} for k, v in ss.groupdict(default='').items() if v]
     else:
         tokenlist += [{'TK': dicsp.pop('TX')}]
     return tokenlist
 
 
-def splitbypunct(dicpn):
+def splitbypunct2(dicpn):
     tokenlist = []
     text = list(dicpn.values())[0]
-    splitpunct = re.match(r'(?P<TK>.+?)(?P<PN>[,.:;]$)', text)
-    if splitpunct:
-        #         print(splitpunct.groupdict(default=''))
-        tokenlist += [{k: v} for k, v in splitpunct.groupdict(default='').items() if v]
+    splitpunct = r'[,.:;]$'
+    if re.match(splitpunct, text[-1]):
+        if len(text) > 1:
+            tokenlist += [{'TK': text[:-1]}]
+        tokenlist += [{'PN': text[-1]}]
     else:
         tokenlist += [dicpn]
     return tokenlist
 
 
-# def splitbyblacket(dicbl):
-#     tokenlist = []
-#     text = list(dicbl.values())[0]
-#     blacs = '\\u0028\\u005B' # ( [  #〈 Left-Pointing Angle Bracket →003C(<) →2039(‹) →27E8(⟨) ≡3008(〈)
-#     blace = '\\u005D\\u0029' # ) ]  # 〉Right-Pointing Angle Bracket →003E(>) →203A(›) →27E9(⟩) ≡3009(〉)
-#     blac = blacs + blace
-#     splitblac = re.match(rf'(?P<BL1>^[{blacs}])(?P<TK>[^{blac}]+)(?P<BL2>[{blace}])', text)
-#     splitblacs = re.match(rf'(?P<BL1>^[{blacs}])(?P<TK>[^{blac}]+)', text)
-#     splitblace = re.match(rf'(?P<TK>[^{blac}]+)(?P<BL2>[{blace}])', text)
-#     if splitblac:
-# #         print(splitblac.groupdict(default=''))
-#         tokenlist += [{k: v} for k, v in splitblac.groupdict(default='').items() if v]
-#     elif splitblacs:
-#         tokenlist += [{k: v} for k, v in splitblacs.groupdict(default='').items() if v]
-#     elif splitblace:
-# #         print(splitblace.groupdict(default=''))
-#         tokenlist += [{k: v} for k, v in splitblace.groupdict(default='').items() if v]
-#     else:
-#         tokenlist += [dicbl]
-#     return tokenlist
 def splitbyblacket2(dicbl):
     tokenlist = []
     text = list(dicbl.values())[0]
-    blacs = '\u0028\u005B\u003C\u2039\u27E8\u3008'  # ( [  #〈 Left-Pointing Angle Bracket →003C(<) →2039(‹) →27E8(⟨) ≡3008(〈)
-    blace = '\u005D\u0029\u003E\u203A\u27E9\u3009'  # ) ]  # 〉Right-Pointing Angle Bracket →003E(>) →203A(›) →27E9(⟩) ≡3009(〉)
+    blacs = '\u0028\u005B\u003C\u2039\u27E8\u3008'  # ( [  #〈  003C(<) 2039(‹) 27E8(⟨) 3008(〈)
+    blace = '\u005D\u0029\u003E\u203A\u27E9\u3009'  # ) ]  # 〉 003E(>) 203A(›) 27E9(⟩) 3009(〉)
     blac = blacs + blace
 
-    lists = []
     index = []
     tx = []
     for i, t in enumerate(text):
@@ -164,17 +144,6 @@ def splitbyinfix(dicif):
     return tokenlist
 
 
-# def splitbyprefix(dicpr):
-#     tokenlist = []
-#     text = list(dicpr.values())[0]
-#     prefix = '\\u002B\\u002D\\u003C-\\u003E\\u2190-\\u21FF\\u2200-\\u22FF' # +-=<>, Arrows, Relations
-#     splitprefix = re.match(rf'(?P<PR>^[{prefix}])(?P<TK>[^{prefix}]+)', text)
-#     if splitprefix:
-# #         print(splitprefix.groupdict(default=''))
-#         tokenlist += [{k: v} for k, v in splitprefix.groupdict(default='').items() if v]
-#     else:
-#         tokenlist += [dicpr]
-#     return tokenlist
 def splitbyprefix2(dicpr):
     tokenlist = []
     text = list(dicpr.values())[0]
@@ -191,7 +160,7 @@ def splitbyprefix2(dicpr):
 def splitbysurfix2(dicsr):
     tokenlist = []
     text = list(dicsr.values())[0]
-    surfix = r'[\u0025\u00B0\u002B\u002D\u003C-\u003E\u00B1\u2190-\u21FF\u2200-\u22FF]'  # %,°  +-=<>±, Arrows, Relations
+    surfix = r'[\u0025\u00B0\u002B\u002D\u003C-\u003E\u00B1\u2190-\u21FF\u2200-\u22FF]'  # %,°+-=<>±, Arrows, Relations
     if re.match(surfix, text[-1]):
         if len(text) > 1:
             tokenlist += [{'TK': ''.join(text[:-1])}]
@@ -203,6 +172,7 @@ def splitbysurfix2(dicsr):
 
 def setparagraph(tokenlist):
     paragraphtexts = []
+    #     print([list(w.values())[0] for i, w in enumerate(tokenlist)])
     indexes = [i for i, w in enumerate(tokenlist) if list(w.values())[0] == '\n']
     s = 0
     for index in indexes:
@@ -274,6 +244,8 @@ def calcoffset(tokenlist, offset):
 
 
 def outputtsv(outfile, tokenlist):
+    import difflib
+
     fw = open(outfile, 'w', encoding='utf-8')
     tsv_text = '#FORMAT=WebAnno TSV 3.2\n'
     tsv_text += '#T_SP=webanno.custom.Xml|xml_tag\n\n\n'
@@ -294,65 +266,37 @@ def outputtsv(outfile, tokenlist):
 
 
 # main
-file = Path('../xml2text/10.1063_1.5004600_fulltext_20190405.txt')
+fdir = Path('../xml2text')
+file = Path(fdir / '10.1063_1.5004600_fulltext_20190405.txt')
 with file.open(encoding='utf-8') as f:
     doc = f.read()
-df_sections = pd.read_csv('../xml2text/10.1063_1.5004600_section_offset_20190405.csv')
-df_tags = pd.read_csv('../xml2text/10.1063_1.5004600_xmltag_offset_20190405.csv')
+df_sections = pd.read_csv(fdir / '10.1063_1.5004600_section_offset_20190405.csv')
+df_tags = pd.read_csv(fdir / '10.1063_1.5004600_xmltag_offset_20190405.csv')
 
 section = r'TABLE(.+?)-body'  # remove sections
 new_doc = rmsections(section)
 
 text_list = splitxmltags(new_doc)
 
-para_textlist = []
-for dic in text_list:
-    if 'TX' in dic.keys():
-        para_textlist += splitparagraph(dic)
-    else:
-        para_textlist += [dic]
+commands = {
+    splitparagraph: 'TX',
+    splitbyspace: 'TX',
+    splitbypunct2: 'TK',
+    splitbyblacket2: 'TK',
+    splitbyinfix: 'TK',
+    splitbyprefix2: 'TK',
+    splitbysurfix2: 'TK'
+}
 
-para_tokenlist = []
-for dic_para in para_textlist:
-    if 'TX' in dic_para.keys():
-        para_tokenlist += splitbyspace(dic_para)
-    else:
-        para_tokenlist += [dic_para]
+for command, attr in commands.items():
+    newlist = []
+    for dic in text_list:
+        if attr in dic.keys():
+            newlist += command(dic)
+        else:
+            newlist += [dic]
+        text_list = newlist
+#     print(text_list)
 
-punk_tokenlist = []
-for dic_pn in para_tokenlist:
-    if 'TK' in dic_pn.keys():
-        punk_tokenlist += splitbypunct(dic_pn)
-    else:
-        punk_tokenlist += [dic_pn]
-
-blac_tokenlist = []
-for dic_bl in punk_tokenlist:
-    if 'TK' in dic_bl.keys():
-        blac_tokenlist += splitbyblacket2(dic_bl)
-    else:
-        blac_tokenlist += [dic_bl]
-
-infix_tokenlist = []
-for dic_if in blac_tokenlist:
-    if 'TK' in dic_if.keys():
-        infix_tokenlist += splitbyinfix(dic_if)
-    else:
-        infix_tokenlist += [dic_if]
-
-prefix_tokenlist = []
-for dic_pr in infix_tokenlist:
-    if 'TK' in dic_pr.keys():
-        prefix_tokenlist += splitbyprefix2(dic_pr)
-    else:
-        prefix_tokenlist += [dic_pr]
-
-surfix_tokenlist = []
-for dic_sr in prefix_tokenlist:
-    if 'TK' in dic_sr.keys():
-        surfix_tokenlist += splitbysurfix2(dic_sr)
-    else:
-        surfix_tokenlist += [dic_sr]
-
-output = './10.1063_1.5004600_webanno.tsv'
-outputtsv(output, surfix_tokenlist)
+output = Path(fdir / '10.1063_1.5004600_webanno.tsv')
+outputtsv(output, text_list)
