@@ -1,3 +1,4 @@
+from pathlib2 import Path
 import re
 
 RE_LF = re.compile(r'(?P<TX>[^\n]+)(?P<LF>\n)')
@@ -6,8 +7,8 @@ RE_SP = re.compile(r'(?P<TK>[^\s]+)(?P<SP>\s)')
 
 
 class ReadFiles:
-    def __init__(self, filename='u.txt'):
-        with open(filename, 'r', encoding='utf-8') as f:
+    def __init__(self, filename):
+        with filename.open(encoding='utf-8') as f:
             self.text = f.read()
             self.paragraph = [m.groupdict(default='') for m in RE_LF.finditer(self.text)]
             self.textlist = []
@@ -50,8 +51,8 @@ class ReadFiles:
                 self.tokenlist += [textdic]
         return self.tokenlist
 
-
-t = ReadFiles()
+file = Path('../xml2text/10.1063_1.5004600_fulltext_20190405.txt')
+t = ReadFiles(file)
 t.offset((0, 10))
 t.splitbypn()
-t.splitbysp()
+print(t.splitbysp())
