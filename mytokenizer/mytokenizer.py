@@ -1,302 +1,235 @@
 from pathlib2 import Path
-import pandas as pd
 import re
+import pandas as pd
+from difflib import SequenceMatcher
+
+import splitword
+
+RE_LF = re.compile(r'(?P<TX>[^\n]+)(?P<LF>\n)')
 
 
-def rmsections(sect):
-    secs = df_sections[df_sections['sec_title'].str.match(re.compile(sect, re.I))]
-    newdoc = doc
-    tups = []
-    rm_secs = []
-    rm_tags = []
-    for sec in secs.itertuples():
-        s, e = sec.start, sec.end
-        tups.append([s, e])
-        newdoc = newdoc.replace(doc[s:e], '', 1)
+class FileRead:
 
-        sloc = df_sections[(df_sections.start >= s) & (df_sections.end <= e)].index
-        rm_secs += [i for i in sloc]
+    def __init__(self, **kwargs):
+        self.textfile = kwargs['fdir'] / kwargs['textfile']
+        with self.textfile.open(encoding='utf-8') as f:
+            self.doc = f.read()
+        self.section = kwargs['fdir'] / kwargs['sectionfile']
+        self.tag = kwargs['fdir'] / kwargs['tagfile']
+        self.df_section = pd.read_csv(self.section)
+        self.df_tag = pd.read_csv(self.tag)
 
-        tloc = df_tags[(df_tags.start >= s) & (df_tags.end <= e)].index
-        if len(tloc) > 0:
-            rm_tags += [i for i in tloc]
+    def __repr__(self):
+        return self.doc
 
-    for tup in tups[::-1]:  # subtract from the end of lists
-        s, e = tup
-        offset = e - s
-        df_sections.loc[df_sections.start >= s, 'start'] -= offset
-        df_sections.loc[df_sections.end >= e, 'end'] -= offset
-        df_tags.loc[df_tags.start >= s, 'start'] -= offset
-        df_tags.loc[df_tags.end >= e, 'end'] -= offset
+    def sectionlist(self):
+        print(self.df_section)
 
-    df_sections.drop(rm_secs)
-    df_tags.drop(rm_tags)
-    return newdoc
+    def taglist(self):
+        print(self.df_tag)
 
+    def rmsections(self, sect):
+        secs = self.df_section[self.df_section['sec_title'].str.match(re.compile(sect, re.I))]
+        newdoc = self.doc
+        tups = []
+        rm_secs = []
+        rm_tags = []
+        for sec in secs.itertuples():
+            s, e = sec.start, sec.end
+            tups.append([s, e])
+            newdoc = newdoc.replace(self.doc[s:e], '', 1)
 
-def splitxmltags(newdoc):
-    tags = df_tags[df_tags.taglist.str.contains('xref|sub|sup|italic')]
-    i = 0
-    textlist = []
-    for tag in tags.itertuples():
-        s, e = tag.start, tag.end
-        #     print(tag.taglist)
-        key = ''
-        if 'xref' in tag.taglist:
-            key = 'REF'
-        elif 'subsup' in tag.taglist:
-            key = 'SBP'
-        elif 'sub' in tag.taglist:
-            key = 'SUB'
-        elif 'sup' in tag.taglist:
-            key = 'SUP'
-        elif 'italic' in tag.taglist:
-            key = 'ITL'
-        if newdoc[i:s]:
-            textlist.append({'TX': newdoc[i:s]})
-        textlist.append({key: newdoc[s:e]})
-        i = e
-    if i < len(newdoc):
-        textlist.append({'TX': newdoc[i:]})
-    return textlist
+            sloc = self.df_section[(self.df_section.start >= s) & (self.df_section.end <= e)].index
+            rm_secs += [i for i in sloc]
 
+            tloc = self.df_tag[(self.df_tag.start >= s) & (self.df_tag.end <= e)].index
+            if len(tloc) > 0:
+                rm_tags += [i for i in tloc]
 
-def splitparagraph(dicpara):
-    textlist = []
-    text = list(dicpara.values())[0]
-    if re.search('\n', text):
-        split_line_space = re.finditer(r'([^\n]+)(\n)([^\n]+)?|(\n)([^\n]+)?', text)
-        for s in split_line_space:
-            for v in s.groups(default=''):
-                if v:
-                    key = 'TX' if v != '\n' else 'LF'
-                    textlist += [{key: v}]
-    else:
-        textlist += [dicpara]
-    return textlist
+        for tup in tups[::-1]:  # subtract from the end of lists
+            s, e = tup
+            offset = e - s
+            self.df_section.loc[self.df_section.start >= s, 'start'] -= offset
+            self.df_section.loc[self.df_section.end >= e, 'end'] -= offset
+            self.df_tag.loc[self.df_tag.start >= s, 'start'] -= offset
+            self.df_tag.loc[self.df_tag.end >= e, 'end'] -= offset
 
+        self.df_section.drop(rm_secs)
+        self.df_tag.drop(rm_tags)
+        return newdoc
 
-def splitbyspace(dicsp):
-    tokenlist = []
-    text = list(dicsp.values())[0]
-    if re.search(r'\s', text):
-        splitspaces = re.finditer(r'(?P<TK>[^\s]+)(?P<SP>\s)?|(?P<SP2>\s)?', text)
-        for ss in splitspaces:
-            tokenlist += [{k[0:2]: v} for k, v in ss.groupdict(default='').items() if v]
-    else:
-        tokenlist += [{'TK': dicsp.pop('TX')}]
-    return tokenlist
+    def newparagraph(self, newdoc):
+        return [text.group() for text in RE_LF.finditer(newdoc)]
+
+    def splitxmltags(self, newdoc):
+        tags = self.df_tag[self.df_tag.taglist.str.contains('xref|sub|sup|italic')]
+        i = 0
+        textlist = []
+        for tag in tags.itertuples():
+            s, e = tag.start, tag.end
+            #     print(tag.taglist)
+            key = ''
+            if 'xref' in tag.taglist:
+                key = 'REF'
+            elif 'subsup' in tag.taglist:
+                key = 'SBP'
+            elif 'sub' in tag.taglist:
+                key = 'SUB'
+            elif 'sup' in tag.taglist:
+                key = 'SUP'
+            elif 'italic' in tag.taglist:
+                key = 'ITL'
+            if newdoc[i:s]:
+                textlist.append({'TX': newdoc[i:s]})
+            textlist.append({key: newdoc[s:e]})
+            i = e
+        if i < len(newdoc):
+            textlist.append({'TX': newdoc[i:]})
+        return textlist
 
 
-def splitbypunct2(dicpn):
-    tokenlist = []
-    text = list(dicpn.values())[0]
-    splitpunct = r'[,.:;]$'
-    if re.match(splitpunct, text[-1]):
-        if len(text) > 1:
-            tokenlist += [{'TK': text[:-1]}]
-        tokenlist += [{'PN': text[-1]}]
-    else:
-        tokenlist += [dicpn]
-    return tokenlist
+class OutFile:
 
+    def __init__(self, tokenlist, **kwargs):
+        self.tokenlist = tokenlist
+        self.outfile = self.section = kwargs['webannotsv']
 
-def splitbyblacket2(dicbl):
-    tokenlist = []
-    text = list(dicbl.values())[0]
-    blacs = '\u0028\u005B\u003C\u2039\u27E8\u3008'  # ( [  #〈  003C(<) 2039(‹) 27E8(⟨) 3008(〈)
-    blace = '\u005D\u0029\u003E\u203A\u27E9\u3009'  # ) ]  # 〉 003E(>) 203A(›) 27E9(⟩) 3009(〉)
-    blac = blacs + blace
+    def outputtsv(self, orig_paragraph):
 
-    index = []
-    tx = []
-    for i, t in enumerate(text):
-        if t in blacs:
-            tokenlist += [{'BL1': t}]
-            index += [i]
-        elif t in blace:
-            tokenlist += [{'BL2': t}]
-            index += [i]
-        else:
-            tx += t
-            if i < len(text) - 1:
-                if text[i + 1] in blac:
-                    tokenlist += [{'TK': ''.join(tx)}]
-                    tx = ''
-            else:
-                tokenlist += [{'TK': ''.join(tx)}]
-    return tokenlist
+        def setparagraph(tokenlist):
 
+            paragraphtexts = []
+            indexes = [ii for ii, w in enumerate(tokenlist) if list(w.values())[0] == '\n']
+            s = 0
+            for index in indexes:
+                e = index + 1
+                text = ''.join([''.join(list(w.values())) for w in tokenlist[s:e]])
+                if text != '\n':
+                    paragraphtexts.append(text)
+                s = e
 
-def splitbyinfix(dicif):
-    tokenlist = []
-    text = list(dicif.values())[0]
-    infix = '\\u002F\\u002D\\u2215\\u2192'  # -/∕ →
-    splitinfix = re.match(
-        rf'(?P<TK1>[^{infix}]+)?(?P<IN1>[{infix}])(?P<TK2>[^{infix}]+)(?:(?P<IN2>[{infix}])(?P<TK3>[^{infix}]+$))?'
-        rf'(?:(?P<IN3>[{infix}])(?P<TK4>[^{infix}]+$))?',
-        text)
-    if splitinfix:
-        #         print(splitinfix.groupdict(default=''))
-        tokenlist += [{k: v} for k, v in splitinfix.groupdict(default='').items() if v]
-    else:
-        tokenlist += [dicif]
-    return tokenlist
+            return paragraphtexts
 
+        def calcoffset(tokenlist, offset):
+            entity_dic = {
+                'TK': '_',
+                'PR': '_',
+                'SR': '_',
+                'PN': '_',
+                'BL1': '_',
+                'BL2': '_',
+                'LF': '_',
+                'SP': '_',
+                'TK1': 'compound',
+                'TK2': 'compound',
+                'TK3': 'compound',
+                'TK4': 'compound',
+                'IN1': 'compound',
+                'IN2': 'compound',
+                'IN3': 'compound',
+                'SUB': 'subscript',
+                'SUP': 'superscript',
+                'ITL': 'italic',
+                'REF': 'reference',
+                '_': '_'
+            }
+            dic_token = {}
+            ipar = 1  # for dic_token.keys()
+            itok = 1  # for dic_token.keys()
+            ient = 1  # counter for entities
+            for i in range(len(tokenlist)):
+                value = list(tokenlist[i].values())[0]
+                ent = list(tokenlist[i].keys())[0]
+                entity = entity_dic.get(ent)
+                if entity and entity != '_':
+                    if entity_dic.get(list(tokenlist[i - 1].keys())[0]) != entity_dic.get(
+                            ent):  # different entity case from previous
+                        ient += 1
+                    entity += f'[{ient}]'
 
-def splitbyprefix2(dicpr):
-    tokenlist = []
-    text = list(dicpr.values())[0]
-    prefix = r'[\u002B\u002D\u003C-\u003E\u00B1\u2190-\u21FF\u2200-\u22FF]'  # +-=<>±, Arrows, Relations
-    if re.match(prefix, text[0]):
-        tokenlist += [{'PR': text[0]}]
-        if len(text) > 1:
-            tokenlist += [{'TK': ''.join(text[1:])}]
-    else:
-        tokenlist += [{'TK': text}]
-    return tokenlist
+                if i < len(tokenlist) - 1 and 'LF' not in tokenlist[i].keys() and 'SP' in tokenlist[i + 1].keys():
+                    s = offset
+                    e = offset + len(value)
+                    dic_token[ipar, itok] = (s, e, value, entity)  # words without space
+                    e += len(list(tokenlist[i + 1].values())[0])  # count for space
+                    offset = e
+                    itok += 1
+                elif 'LF' in tokenlist[i].keys():
+                    dic_token[ipar, itok] = value
+                    offset += len(value)
+                    ipar += 1
+                    itok = 1
+                elif 'SP' not in tokenlist[i].keys():
+                    s = offset
+                    e = offset + len(value)
+                    dic_token[ipar, itok] = (s, e, value, entity)
+                    offset = e
+                    itok += 1
 
+            return dic_token
 
-def splitbysurfix2(dicsr):
-    tokenlist = []
-    text = list(dicsr.values())[0]
-    surfix = r'[\u0025\u00B0\u002B\u002D\u003C-\u003E\u00B1\u2190-\u21FF\u2200-\u22FF]'  # %,°+-=<>±, Arrows, Relations
-    if re.match(surfix, text[-1]):
-        if len(text) > 1:
-            tokenlist += [{'TK': ''.join(text[:-1])}]
-        tokenlist += [{'SR': text[-1]}]
-    else:
-        tokenlist += [{'TK': text}]
-    return tokenlist
+        fw = open(self.outfile, 'w', encoding='utf-8')
+        tsv_text = '#FORMAT=WebAnno TSV 3.2\n'
+        tsv_text += '#T_SP=webanno.custom.Xml|xml_tag\n\n\n'
 
+        paragraph_texts = setparagraph(self.tokenlist)
+        dic_token = calcoffset(self.tokenlist, offset=0)
 
-def setparagraph(tokenlist):
-    paragraphtexts = []
-    #     print([list(w.values())[0] for i, w in enumerate(tokenlist)])
-    indexes = [i for i, w in enumerate(tokenlist) if list(w.values())[0] == '\n']
-    s = 0
-    for index in indexes:
-        e = index + 1
-        text = ''.join([''.join(list(w.values())) for w in tokenlist[s:e]])
-        if text != '\n':
-            paragraphtexts.append(text)
-        s = e
-    return paragraphtexts
+        # check paragraphs
+        matcher = SequenceMatcher()
+        matcher.set_seq1(paragraph_texts)
+        matcher.set_seq2(orig_paragraph)
+        assert matcher.quick_ratio() == 1, "Paragraphs don't match!"
 
+        for i, paragraph_text in enumerate(paragraph_texts):
+            tsv_text += f'#Text={paragraph_text}'
+            for keys, values in dic_token.items():
+                if keys[0] == i + 1:
+                    if values == '\n':
+                        tsv_text += values
+                    else:
+                        tsv_text += ('{}-{}\t{}-{}\t{}\t{}\t\n'.format(*keys, *values))
 
-def calcoffset(tokenlist, offset):
-    entity_dic = {
-        'TK': '_',
-        'PR': '_',
-        'SR': '_',
-        'PN': '_',
-        'BL1': '_',
-        'BL2': '_',
-        'LF': '_',
-        'SP': '_',
-        'TK1': 'compound',
-        'TK2': 'compound',
-        'TK3': 'compound',
-        'TK4': 'compound',
-        'IN1': 'compound',
-        'IN2': 'compound',
-        'IN3': 'compound',
-        'SUB': 'subscript',
-        'SUP': 'superscript',
-        'ITL': 'italic',
-        'REF': 'reference',
-        '_': '_'
-    }
-    dic_token = {}
-    ipar = 1  # for dic_token.keys()
-    itok = 1  # for dic_token.keys()
-    ient = 1  # counter for entities
-    for i in range(len(tokenlist)):
-        value = list(tokenlist[i].values())[0]
-        ent = list(tokenlist[i].keys())[0]
-        entity = entity_dic.get(ent)
-        if entity and entity != '_':
-            if entity_dic.get(list(tokenlist[i - 1].keys())[0]) != entity_dic.get(
-                    ent):  # different entity case from previous
-                ient += 1
-            entity += f'[{ient}]'
-
-        if i < len(tokenlist) - 1 and 'LF' not in tokenlist[i].keys() and 'SP' in tokenlist[i + 1].keys():
-            s = offset
-            e = offset + len(value)
-            dic_token[ipar, itok] = (s, e, value, entity)  # words without space
-            e += len(list(tokenlist[i + 1].values())[0])  # count for space
-            offset = e
-            itok += 1
-        elif 'LF' in tokenlist[i].keys():
-            dic_token[ipar, itok] = value
-            offset += len(value)
-            ipar += 1
-            itok = 1
-        elif 'SP' not in tokenlist[i].keys():
-            s = offset
-            e = offset + len(value)
-            dic_token[ipar, itok] = (s, e, value, entity)
-            offset = e
-            itok += 1
-
-    return dic_token
-
-
-def outputtsv(outfile, tokenlist):
-    import difflib
-
-    fw = open(outfile, 'w', encoding='utf-8')
-    tsv_text = '#FORMAT=WebAnno TSV 3.2\n'
-    tsv_text += '#T_SP=webanno.custom.Xml|xml_tag\n\n\n'
-
-    paragraph_texts = setparagraph(tokenlist)
-    dic_token = calcoffset(tokenlist, offset=0)
-
-    for i, paragraph_text in enumerate(paragraph_texts):
-        tsv_text += f'#Text={paragraph_text}'
-        for keys, values in dic_token.items():
-            if keys[0] == i + 1:
-                if values == '\n':
-                    tsv_text += values
-                else:
-                    tsv_text += ('{}-{}\t{}-{}\t{}\t{}\t\n'.format(*keys, *values))
-
-    print(tsv_text.rstrip('\n\n'), file=fw)
+        print(tsv_text.rstrip('\n\n'), file=fw)
 
 
 # main
-fdir = Path('../xml2text')
-file = Path(fdir / '10.1063_1.5004600_fulltext_20190405.txt')
-with file.open(encoding='utf-8') as f:
-    doc = f.read()
-df_sections = pd.read_csv(fdir / '10.1063_1.5004600_section_offset_20190405.csv')
-df_tags = pd.read_csv(fdir / '10.1063_1.5004600_xmltag_offset_20190405.csv')
+filelist = {
+    'fdir': Path('../xml2text'),
+    'textfile': '10.1063_1.5004600_fulltext_20190405.txt',
+    'sectionfile': '10.1063_1.5004600_section_offset_20190405.csv',
+    'tagfile': '10.1063_1.5004600_xmltag_offset_20190405.csv',
+    'webannotsv': '10.1063_1.5004600_webanno.tsv'
+}
 
-section = r'TABLE(.+?)-body'  # remove sections
-new_doc = rmsections(section)
+doc = FileRead(**filelist)
 
-text_list = splitxmltags(new_doc)
+section = r'TABLE(.+?)-body'  # remove sections (Table body)
+new_doc = doc.rmsections(section)
+text_list = doc.splitxmltags(new_doc)
 
+# doc.newparagraph(new_doc)
+
+# tokenize
 commands = {
-    splitparagraph: 'TX',
-    splitbyspace: 'TX',
-    splitbypunct2: 'TK',
-    splitbyblacket2: 'TK',
-    splitbyinfix: 'TK',
-    splitbyprefix2: 'TK',
-    splitbysurfix2: 'TK'
+    'splitparagraph': 'TX',
+    'splitbyspace': 'TX',
+    'splitbypunct2': 'TK',
+    'splitbyblacket2': 'TK',
+    'splitbyinfix': 'TK',
+    'splitbyprefix2': 'TK',
+    'splitbysurfix2': 'TK'
 }
 
 for command, attr in commands.items():
     newlist = []
     for dic in text_list:
         if attr in dic.keys():
-            newlist += command(dic)
+            newlist += eval('splitword.' + command)(dic)
         else:
             newlist += [dic]
         text_list = newlist
-#     print(text_list)
 
-output = Path(fdir / '10.1063_1.5004600_webanno.tsv')
-outputtsv(output, text_list)
+# output
+out = OutFile(text_list, **filelist)
+out.outputtsv(doc.newparagraph(new_doc))
