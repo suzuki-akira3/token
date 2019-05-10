@@ -35,7 +35,7 @@ class FileRead:
         rm_secs = []
         rm_tags = []
         for sec in secs.itertuples():
-            s, e = sec.start, sec.end
+            s, e = sec.span()
             tups.append([s, e])
             newdoc = newdoc.replace(self.doc[s:e], '', 1)
 

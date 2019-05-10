@@ -20,4 +20,7 @@ class Sentence:
         return 'Sentence(%s)' % reprlib.repr(self.text)
 
 s = Sentence('The time has come,"the Walrus said,')
-print(s)
+# print(s)
+
+m = re.match(r'\w+', 'text text text')
+print(m.span())
