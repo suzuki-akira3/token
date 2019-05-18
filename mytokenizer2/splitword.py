@@ -191,3 +191,37 @@ def splitbysurfix2(dic):
         tokenlist += [dic]
            
     return tokenlist
+
+'''
+def split2list(self, RE_CHARA, addtag):
+    text = self.__string
+    tag = self.__tag
+    offset = self.__offset
+    textlist = []
+    _text = []
+    s = 0
+    if RE_CHARA == prefix:
+        index = [i for i, t in enumerate(text) if re.match(RE_CHARA, t) and i == 0]
+    elif RE_CHARA == surfix or RE_CHARA == punct:
+        index = [i for i, t in enumerate(text) if re.match(RE_CHARA, t) and i == len(text) - 1]
+        print(index)
+    elif RE_CHARA == infix:
+        index = [i for i, t in enumerate(text) if re.match(RE_CHARA, t) and 0 < i < len(text) - 1]
+    else:
+        index = [i for i, t in enumerate(text) if re.match(RE_CHARA, t)]
+
+    for i in range(len(text)):
+        if i in index:
+            newtag = tag + [addtag]
+            textlist += [mytuple(text[i], newtag, (i, i + 1))]
+            s += 1
+        else:
+            _text += [text[i]]
+            if i + 1 in index or i == len(text) - 1:
+                e = s + len(_text)
+                textlist += [mytuple(''.join(_text), tag, (s, e))]
+                _text = []
+                s = e
+
+    return textlist
+'''
