@@ -204,6 +204,11 @@ filelist = {
 
 doc = FileRead(**filelist)
 
+import pickle
+
+with open('test.pickle', 'wb') as fw:
+    pickle.dump(doc, fw)
+
 section = r'TABLE(.+?)-body'  # remove sections (Table body)
 new_doc = doc.rmsections(section)
 text_list = doc.splitxmltags(new_doc)
